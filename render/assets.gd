@@ -17,7 +17,7 @@ var _fallback: Texture2D
 var _flash_shader: Shader
 
 func _init() -> void:
-	for mod in [ArtChars, ArtFx, ArtEnemies1, ArtEnemies2, ArtEnemies3, ArtEnemies4, ArtBosses, ArtIcons]:
+	for mod in [ArtChars, ArtFx, ArtEnemies1, ArtEnemies2, ArtEnemies3, ArtEnemies4, ArtBosses, ArtIcons, ArtPatrons]:
 		mod.register(self)
 	_flash_shader = load("res://render/hitflash.gdshader")
 

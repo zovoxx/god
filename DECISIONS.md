@@ -68,3 +68,13 @@ Each entry: what was decided and why.
 - After a boss: +30 % heal, then the next depth's doors. After the fourth boss the run is won.
 - Every depth has its own periodic floor hazard in combat rooms past the first (Ember Vents, Brine Pools, Piston Spikes, Void Rifts) that always warns for 0.7 s (two pulses) before it hurts.
 - Autosave happens on entering each room (and on quitting mid-room); "Continue" restarts the saved room from its beginning with the saved build.
+
+## Lights and boons (phase 6)
+- Boon content is data (`data/boons.tres`): infusion boons set a slot's element; every other effect is a `mods` list applied through `Stats.apply_mod` ("+key", "-key", "*key", "f:flag"), and the unique mechanics read those flags in `sim/boon_fx.gd`.
+- Rarity names are Common / Rare / Epic / Legendary (×1.0 / 1.35 / 1.75 / 2.2). Legendary-*slot* boons always arrive at Legendary rarity with fixed values; duos at least Epic.
+- Rarity roll per card: 2.5 % Legendary, 8 % Epic, 24 % Rare; elite/guardian rooms set a Rare floor, the Fate Die raises the floor by one, the Altar gives Epic, the Gauntlet Legendary.
+- A duo can replace one card (35 % when eligible). It needs the Concord unlock and at least one boon from each of its two Lights.
+- Before/after numbers are computed by rebuilding the stats with the candidate boon and listing up to three changed values (plus element changes per slot).
+- Inputs pressed during hit-stop are written into the input buffer (they used to be lost — found by the Overdrive test).
+- Labels only wrap when given a width (`UI.para`); full-rect overlays use `set_anchors_and_offsets_preset` (a bare anchor preset left them at zero size under a CanvasLayer).
+- Godot's generated `*.uid` files are committed, as Godot recommends.

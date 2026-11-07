@@ -14,11 +14,11 @@ func setup(s: Sim) -> void:
 
 func _ready() -> void:
 	theme = UI.theme()
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	var bg := ColorRect.new()
 	bg.color = Color(0.02, 0.01, 0.04, 0.8)
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 	var root := UI.hbox(30)
 	add_child(UI.center(root))
@@ -45,8 +45,7 @@ func _ready() -> void:
 	for h in entries:
 		var r := UI.hbox(10)
 		r.add_child(UI.tex(String(h.art), Vector2(36, 36)))
-		var l := UI.label("%s — %s" % [h.source, h.attack], 21, UI.INK)
-		l.custom_minimum_size = Vector2(360, 0)
+		var l := UI.para("%s — %s" % [h.source, h.attack], 21, UI.INK, 360)
 		r.add_child(l)
 		r.add_child(UI.label("-%d" % int(h.dmg), 22, Color("#ff6a5a")))
 		lv.add_child(r)
@@ -62,8 +61,7 @@ func _ready() -> void:
 			var d := Boons.def(b.id)
 			var col := Boons.color_of(b.id)
 			bv.add_child(UI.label("%s  ·  %s" % [d.get("name", b.id), Boons.RARITY_NAMES[int(b.rarity)]], 23, col))
-			var desc := UI.label(Boons.describe(b.id, int(b.rarity), int(b.get("level", 1))), 19, UI.INK)
-			desc.custom_minimum_size = Vector2(560, 0)
+			var desc := UI.para(Boons.describe(b.id, int(b.rarity), int(b.get("level", 1))), 19, UI.INK, 560)
 			bv.add_child(desc)
 	bp.add_child(UI.scroll(bv, Vector2(600, 600)))
 

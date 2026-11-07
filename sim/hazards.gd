@@ -111,6 +111,8 @@ static func _hit_enemies(sim, h: SimHazard) -> void:
 			Combat.deal(sim, e, hit)
 			if h.root > 0.0 and e.alive and not e.is_boss:
 				e.root_t = maxf(e.root_t, h.root * (0.5 if e.is_guardian else 1.0))
+			if h.slot == "dash" and h.kind in ["fire_trail", "caltrops"]:
+				pass
 			if h.data.has("pull") and e.alive and not e.no_knock:
 				e.kvel += (h.pos - e.pos).normalized() * float(h.data.pull) / maxf(0.5, e.mass)
 

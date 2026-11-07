@@ -164,6 +164,8 @@ func recompute(sim) -> void:
 			st.apply_mod(String(F.stat), float(F.per) * int(forges[fid]))
 	Keepsakes.apply(st, keepsake)
 	sim.stats = st
+	Status.chill_slow = st.chill_per_stack
+	Status.dread = st.val("dread")
 	var p: SimPlayer = sim.player
 	var old_max := p.max_hp
 	p.max_hp = max_hp() + st.max_hp

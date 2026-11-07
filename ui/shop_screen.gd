@@ -13,11 +13,11 @@ func setup(f: RoomFlow) -> void:
 
 func _ready() -> void:
 	theme = UI.theme()
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	var bg := ColorRect.new()
 	bg.color = Color(0.02, 0.01, 0.04, 0.72)
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 	var p := UI.panel(Vector2(980, 0))
 	var v := UI.vbox(12)

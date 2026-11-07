@@ -96,7 +96,9 @@ func hp_frac() -> float:
 func move_speed() -> float:
 	var s := speed * speed_mul
 	if chill > 0.0:
-		s *= maxf(0.25, 1.0 - chill * 0.06)
+		s *= maxf(0.25, 1.0 - chill * Status.chill_slow)
+	if hex_t > 0.0 and Status.dread > 0.0:
+		s *= 1.0 - Status.dread
 	if slow_t > 0.0:
 		s *= 0.6
 	if root_t > 0.0:

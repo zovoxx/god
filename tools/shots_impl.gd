@@ -135,8 +135,11 @@ func _boon() -> void:
 			_kill_all())
 	main.game.add_child(t)
 
+var _choice_frames := 0
 func _boon_ready() -> bool:
-	return main.game != null and main.game.choice != null and cur.t > 40
+	if main.game != null and main.game.choice != null:
+		_choice_frames += 1
+	return _choice_frames > 45
 
 func _wick() -> void:
 	main.show_title()

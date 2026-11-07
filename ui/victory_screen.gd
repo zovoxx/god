@@ -10,18 +10,17 @@ func setup(l: Array) -> void:
 
 func _ready() -> void:
 	theme = UI.theme()
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	var bg := ColorRect.new()
 	bg.color = Color("#1a0e08")
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 	var v := UI.vbox(18)
 	v.alignment = BoxContainer.ALIGNMENT_CENTER
 	v.add_child(UI.title("THE SUN RISES", 96, Color("#ffd27a")))
 	for l in lines:
-		var lb := UI.label(String(l), 28, UI.INK, HORIZONTAL_ALIGNMENT_CENTER)
-		lb.custom_minimum_size = Vector2(1200, 0)
+		var lb := UI.para(String(l), 28, UI.INK, 1200, HORIZONTAL_ALIGNMENT_CENTER)
 		v.add_child(lb)
 	var b := UI.button("Continue", func(): done.emit())
 	var cc := CenterContainer.new()

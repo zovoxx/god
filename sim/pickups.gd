@@ -45,9 +45,13 @@ static func update_all(sim, dt: float) -> void:
 			pk.vel = pk.vel.lerp(to.normalized() * spd, clampf(dt * 10.0, 0.0, 1.0))
 		else:
 			pk.vel *= exp(-6.0 * dt)
-		pk.pos += pk.vel * dt
+		var step_len: float = pk.vel.length() * dt
+		if pk.magnet and step_len >= d:
+			pk.pos = p.pos
+		else:
+			pk.pos += pk.vel * dt
 		sim.collide_arena(pk, pk.radius)
-		if d < p.radius + pk.radius + 4.0 and pk.t > 0.15 and p.state != SimPlayer.St.DEAD:
+		if (d < p.radius + pk.radius + 4.0 or (pk.magnet and step_len >= d)) and pk.t > 0.15 and p.state != SimPlayer.St.DEAD:
 			collect(sim, pk)
 			continue
 		keep.append(pk)

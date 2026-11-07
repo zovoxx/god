@@ -78,12 +78,12 @@ static func _box(bg: Color, border: Color, bw: int, radius: int = 10) -> StyleBo
 static func screen(dim: float = 0.0) -> Control:
 	var root := Control.new()
 	root.theme = theme()
-	root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	root.process_mode = Node.PROCESS_MODE_ALWAYS
 	if dim > 0.0:
 		var bg := ColorRect.new()
 		bg.color = Color(BG, dim)
-		bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+		bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		bg.mouse_filter = Control.MOUSE_FILTER_STOP
 		root.add_child(bg)
 	return root
@@ -94,7 +94,13 @@ static func label(text: String, size: int = 26, col: Color = INK, align := HORIZ
 	l.add_theme_font_size_override("font_size", size)
 	l.add_theme_color_override("font_color", col)
 	l.horizontal_alignment = align
+	return l
+
+## wrapped paragraph of a fixed width
+static func para(text: String, size: int, col: Color, width: float, align := HORIZONTAL_ALIGNMENT_LEFT) -> Label:
+	var l := label(text, size, col, align)
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.custom_minimum_size = Vector2(width, 0)
 	return l
 
 static func title(text: String, size: int = 56, col: Color = GOLD) -> Label:
@@ -131,7 +137,7 @@ static func panel(min_size: Vector2 = Vector2.ZERO) -> PanelContainer:
 
 static func center(c: Control) -> CenterContainer:
 	var cc := CenterContainer.new()
-	cc.set_anchors_preset(Control.PRESET_FULL_RECT)
+	cc.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	cc.add_child(c)
 	return cc
 

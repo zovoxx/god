@@ -1,5 +1,9 @@
 class_name Status
 extends RefCounted
+
+## build-wide modifiers read by enemies every frame (set when stats are rebuilt)
+static var chill_slow := 0.06
+static var dread := 0.0
 ## Status effects on enemies: Burn (stacking DoT), Chill → Freeze → Shatter, Hex (more damage
 ## taken, spreads on death), Bleed (stacks that burst on heavy hits), Mark (crit vulnerability),
 ## plus Jolt (chain lightning) and Tide (extra knockback) from slot infusions.
@@ -150,6 +154,8 @@ static func _jolt_hit(sim, e: SimEnemy, dmg: float, src: Vector2) -> void:
 	h.crit_bonus = sim.stats.val("overcharge") - sim.T.crit.base_chance - sim.stats.crit_chance if h.can_crit else 0.0
 	if sim.stats.has("ionize"):
 		e.ionize_t = 3.0
+	if sim.stats.has("static_frost") and e.frozen():
+		h.dmg *= 1.4
 	Combat.deal(sim, e, h)
 
 ## damage multiplier from statuses on the target

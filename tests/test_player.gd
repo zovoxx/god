@@ -70,3 +70,11 @@ func test_walls_block() -> void:
 	f.move = Vector2.LEFT
 	steps(s, 240, f)
 	check(s.player.pos.x >= s.arena.rect.position.x + s.player.radius - 0.01, "player stays inside the arena")
+
+func test_input_during_hitstop_is_buffered() -> void:
+	var s := make_sim()
+	s.request_hitstop(0.08)
+	s.step(press("dash"), 1.0 / 60.0)
+	check(s.player.state != SimPlayer.St.DASH, "nothing moves during hit-stop")
+	steps(s, 8)
+	check(s.player.state == SimPlayer.St.DASH or s.player.dash_charges == 0, "a dash pressed during hit-stop fires right after it")

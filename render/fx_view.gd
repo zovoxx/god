@@ -192,10 +192,24 @@ func _on_event(name: StringName, d: Dictionary) -> void:
 			if d.hit or d.boss:
 				cam.add_trauma(0.2 if not d.boss else 0.35)
 			Audio.play("impact", 1.0, -10.0)
+		&"nova":
+			var nc := _patron_col(String(d.color))
+			rings.append({"pos": d.pos, "r0": 10.0, "r1": d.radius, "t": 0.0, "life": 0.3, "col": nc, "w": 6.0})
+			burst(P.DOT, d.pos, 14, Vector2.ZERO, PI, 120, 300, 0.4, 4.0, nc)
+		&"shatter":
+			burst(P.SHARD, d.pos, 22, Vector2.ZERO, PI, 160, 460, 0.6, 6.0, Color("#bff0ff"))
+			Audio.play("shatter")
+		&"hex_burst":
+			rings.append({"pos": d.pos, "r0": 10.0, "r1": 90.0, "t": 0.0, "life": 0.3, "col": _patron_col("umbra"), "w": 5.0})
+			for to in d.to:
+				bolts.append({"pts": [d.pos, to], "t": 0.0, "life": 0.25, "col": _patron_col("umbra"), "straight": true, "w": 3.0})
+		&"boon_gained":
+			Audio.play("boon_gain")
 		&"explosion":
-			burst(P.EMBER, d.pos, 30, Vector2.ZERO, PI, 120, 420, 0.5, 6.0, Color("#ffb04a"), 4.0)
+			var ec := _patron_col("ember") if d.get("friendly", false) else Color("#ffb04a")
+			burst(P.EMBER, d.pos, 30, Vector2.ZERO, PI, 120, 420, 0.5, 6.0, ec, 4.0)
 			burst(P.SMOKE, d.pos, 10, Vector2.ZERO, PI, 40, 140, 0.8, 18.0, Color(0.3, 0.25, 0.22, 0.5), 2.5)
-			rings.append({"pos": d.pos, "r0": 10.0, "r1": d.radius, "t": 0.0, "life": 0.25, "col": Cfg.col("danger_hot"), "w": 8.0})
+			rings.append({"pos": d.pos, "r0": 10.0, "r1": d.radius, "t": 0.0, "life": 0.25, "col": Cfg.col("player_gold") if d.get("friendly", false) else Cfg.col("danger_hot"), "w": 8.0})
 			_decal(d.pos, d.radius * 0.6, 1)
 			cam.add_trauma(float(Cfg.F.shake.trauma_explosion))
 			Audio.play("explosion")
@@ -516,6 +530,12 @@ func _draw_projectiles(ci: CanvasItem, wv) -> void:
 			ci.draw_circle(pos, r * 0.5, core)
 		else:
 			var art: String = pr.art
+			if art == "cyclone":
+				var gc := _patron_col("gale")
+				for i in 3:
+					var a := time * 14.0 + TAU * i / 3.0
+					ci.draw_arc(pos, pr.radius * (0.5 + 0.2 * i), a, a + 2.4, 12, Color(gc, 0.8), 4.0)
+				continue
 			if art == "wave":
 				ci.draw_arc(pos, pr.radius, pr.rot - 1.0, pr.rot + 1.0, 16, Color(Cfg.col("player"), 0.9), 6.0, true)
 				continue
@@ -541,9 +561,32 @@ func _draw_hazards(ci: CanvasItem, wv, floor_pass: bool) -> void:
 			if floor_pass:
 				DrawTele.draw_enemy_hazard(ci, h, time)
 
+const FIELD_COL := {"fire_trail": "ember", "fire_field": "ember", "radiance": "dawn", "brambles": "thorn", "caltrops": "thorn", "storm_cloud": "storm", "whirlpool": "tide"}
+
 func _draw_player_hazard(ci: CanvasItem, h: SimHazard) -> void:
 	var gold := Cfg.col("player_gold")
 	var white := Cfg.col("player")
+	if FIELD_COL.has(h.kind):
+		var c := _patron_col(FIELD_COL[h.kind])
+		var fade := clampf((h.life - h.t) / 0.4, 0.0, 1.0) * clampf(h.t / 0.15, 0.0, 1.0)
+		ci.draw_circle(h.pos, h.radius, Color(c, 0.16 * fade))
+		ci.draw_arc(h.pos, h.radius, 0, TAU, 32, Color(c, 0.6 * fade), 2.0, true)
+		match h.kind:
+			"whirlpool":
+				for i in 3:
+					var a := -time * 5.0 + TAU * i / 3.0
+					ci.draw_arc(h.pos, h.radius * (0.3 + 0.2 * i), a, a + 2.0, 12, Color(c.lightened(0.3), 0.7 * fade), 3.0)
+			"storm_cloud":
+				ci.draw_colored_polygon(Paint.ell(h.pos + Vector2(0, -60), h.radius * 0.8, h.radius * 0.35, 16), Color(0.25, 0.25, 0.32, 0.6 * fade))
+			"brambles", "caltrops":
+				for i in 6:
+					var p2 := h.pos + Geom.dir(i * 1.7 + h.id) * h.radius * 0.6
+					ci.draw_line(p2 - Vector2(4, 4), p2 + Vector2(4, 4), Color(c, fade), 2.0)
+					ci.draw_line(p2 - Vector2(-4, 4), p2 + Vector2(-4, 4), Color(c, fade), 2.0)
+			_:
+				for i in 2:
+					ci.draw_circle(h.pos + Geom.dir(time * 3.0 + i * PI + h.id) * h.radius * 0.4, h.radius * 0.25, Color(c.lightened(0.4), 0.3 * fade))
+		return
 	var pre := h.warn + h.delay
 	var k := clampf(h.t / maxf(0.001, pre), 0.0, 1.0)
 	if h.shape == SimHazard.Shape.LINE:

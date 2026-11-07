@@ -97,6 +97,7 @@ static func _try_actions(sim, p: SimPlayer, inp: InputFrame, win: float) -> void
 	if p.buffered("special", now, win) and p.special_cd <= 0.0:
 		p.consume("special")
 		if weapon.begin_special(sim, p, inp):
+			BoonFx.on_special(sim)
 			return
 	if p.buffered("attack", now, win):
 		var dash_window: bool = now - p.dash_ended_at <= sim.T.dash.dash_attack_window

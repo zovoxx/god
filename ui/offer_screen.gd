@@ -18,11 +18,11 @@ func setup(o: Dictionary, r: RunState) -> void:
 
 func _ready() -> void:
 	theme = UI.theme()
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	var bg := ColorRect.new()
 	bg.color = Color(0.02, 0.01, 0.04, 0.72)
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 	var v := UI.vbox(18)
 	v.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -114,7 +114,7 @@ func _card(o: Dictionary, i: int) -> Button:
 	b.add_theme_stylebox_override("focus", hover)
 	b.add_theme_stylebox_override("pressed", hover)
 	var v := UI.vbox(8)
-	v.set_anchors_preset(Control.PRESET_FULL_RECT)
+	v.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	v.offset_left = 22
 	v.offset_right = -22
 	v.offset_top = 18
@@ -127,17 +127,14 @@ func _card(o: Dictionary, i: int) -> Button:
 	ic.modulate = col if String(o.get("icon", "")).begins_with("i_slot") else Color.WHITE
 	v.add_child(ic)
 	v.add_child(UI.label(String(o.get("name", "")), 30, col.lightened(0.25), HORIZONTAL_ALIGNMENT_CENTER))
-	var desc := UI.label(String(o.get("desc", "")), 21, UI.INK, HORIZONTAL_ALIGNMENT_CENTER)
-	desc.custom_minimum_size = Vector2(350, 0)
+	var desc := UI.para(String(o.get("desc", "")), 21, UI.INK, 350, HORIZONTAL_ALIGNMENT_CENTER)
 	v.add_child(desc)
 	if o.has("before") and o.has("after") and String(o.before) != String(o.after):
 		v.add_child(UI.label("NOW", 15, UI.DIM, HORIZONTAL_ALIGNMENT_CENTER))
-		var bl := UI.label(String(o.before), 17, UI.DIM, HORIZONTAL_ALIGNMENT_CENTER)
-		bl.custom_minimum_size = Vector2(350, 0)
+		var bl := UI.para(String(o.before), 17, UI.DIM, 350, HORIZONTAL_ALIGNMENT_CENTER)
 		v.add_child(bl)
 		v.add_child(UI.label("AFTER", 15, UI.GOLD, HORIZONTAL_ALIGNMENT_CENTER))
-		var al := UI.label(String(o.after), 17, Color("#bfffd0"), HORIZONTAL_ALIGNMENT_CENTER)
-		al.custom_minimum_size = Vector2(350, 0)
+		var al := UI.para(String(o.after), 17, Color("#bfffd0"), 350, HORIZONTAL_ALIGNMENT_CENTER)
 		v.add_child(al)
 	for c in v.get_children():
 		if c is Control:

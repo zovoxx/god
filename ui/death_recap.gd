@@ -13,11 +13,11 @@ func setup(d: Dictionary) -> void:
 
 func _ready() -> void:
 	theme = UI.theme()
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	var bg := ColorRect.new()
 	bg.color = Color(0.03, 0.01, 0.02, 0.82)
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 	var card := UI.panel(Vector2(1180, 0))
 	var v := UI.vbox(14)
@@ -38,8 +38,7 @@ func _ready() -> void:
 		kv.add_child(UI.label("with %s  ·  %d damage" % [atk, int(k.get("dmg", 0))], 26, UI.INK))
 	var tip := String(data.get("tip", ""))
 	if tip != "":
-		var tl := UI.label("TIP  " + tip, 24, Color("#7fd4ff"))
-		tl.custom_minimum_size = Vector2(700, 0)
+		var tl := UI.para("TIP  " + tip, 24, Color("#7fd4ff"), 700)
 		kv.add_child(tl)
 	var cols := UI.hbox(40)
 	v.add_child(cols)

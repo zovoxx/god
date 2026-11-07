@@ -20,7 +20,7 @@ var streak_glow := 0.0
 var _defiance_shown := -1
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	font = ThemeDB.fallback_font
 	Bus.event.connect(_on_event)

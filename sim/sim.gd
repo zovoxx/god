@@ -71,6 +71,11 @@ func step(inp: InputFrame, dt: float) -> void:
 	advanced = false
 	_update_slowmo(dt)
 	if hitstop > 0.0:
+		# presses during hit-stop still reach the input buffer
+		if inp.attack_p: player.press("attack", time)
+		if inp.special_p: player.press("special", time)
+		if inp.dash_p: player.press("dash", time)
+		if inp.cast_p: player.press("cast", time)
 		hitstop -= dt
 		if hitstop <= 0.0:
 			hitstop_ready_at = real_time + float(F.hitstop.cooldown)

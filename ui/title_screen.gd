@@ -11,13 +11,13 @@ func setup(menu: Array) -> void:
 
 func _ready() -> void:
 	theme = UI.theme()
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var bg := ColorRect.new()
 	bg.color = UI.BG
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 	var art := Control.new()
-	art.set_anchors_preset(Control.PRESET_FULL_RECT)
+	art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	art.draw.connect(func(): _draw_art(art))
 	add_child(art)

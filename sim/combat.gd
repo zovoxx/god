@@ -40,6 +40,8 @@ static func deal(sim, e: SimEnemy, h: HitInfo) -> float:
 		add_overdrive(sim, float(sim.T.overdrive.per_counter))
 		sim.request_hitstop(float(F.hitstop.counter))
 		sim.fire(&"enemy_countered", {"id": e.id, "pos": e.pos, "dir": h.dir})
+		if sim.run != null:
+			sim.run.counters += 1
 	# FINISHER: staggered/frozen enemies under 15 % HP are executed by the next hit
 	var finisher := false
 	if e.finishable and not h.is_dot and h.slot != "status":
@@ -61,6 +63,8 @@ static func deal(sim, e: SimEnemy, h: HitInfo) -> float:
 	var crit := false
 	if h.can_crit and not h.is_dot:
 		var chance: float = float(sim.T.crit.base_chance) + st.crit_chance + h.crit_bonus
+		if h.slot == "special":
+			chance += st.val("dawn_special_crit")
 		if e.mark_t > 0.0:
 			chance += st.mark_crit
 		if e.hex_t > 0.0 and st.has("eclipse"):
@@ -164,6 +168,8 @@ static func on_kill(sim, e: SimEnemy, h: HitInfo, finisher: bool = false) -> voi
 		g += int(sim.F.streak.gold_per_kill[sim.streak_tier])
 		g = int(round(g * (1.0 + st.gold_gain)))
 		Pickups.drop_gold(sim, e.pos, g)
+	if finisher and sim.run != null:
+		sim.run.finishers += 1
 	if finisher:
 		for i in int(sim.F.finisher.orbs):
 			Pickups.spawn(sim, "orb", e.pos, float(sim.F.finisher.orb_heal))
@@ -315,6 +321,7 @@ static func on_dash_start(sim) -> void:
 	BoonFx.on_dash_start(sim)
 
 static func on_dashing(sim, dt: float) -> void:
+	BoonFx.on_dashing(sim, dt)
 	var p: SimPlayer = sim.player
 	for e in sim.enemies:
 		if e.targetable() and not p.dash_hit.has(e.id) and Geom.in_circle(p.pos, p.radius, e.pos, e.radius + 6.0):

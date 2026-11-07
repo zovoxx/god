@@ -52,6 +52,8 @@ func update(sim, e: SimEnemy, dt: float) -> void:
 				e.set_state(0)
 				e.cd = 0.4
 		0:
+			# a freeze/counter during the roar resets the state; never stay invulnerable
+			e.invuln = false
 			move(sim, e, dt)
 			e.cd -= dt
 			if e.cd <= 0.0:

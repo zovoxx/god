@@ -180,7 +180,25 @@ func close_pause() -> void:
 		pause_menu = null
 	get_tree().paused = false
 
+var debug_menu = null
+
+func toggle_debug() -> void:
+	if debug_menu != null:
+		debug_menu.close()
+		return
+	if choice != null or recap != null or pause_menu != null:
+		return
+	debug_menu = load("res://ui/debug_menu.gd").new()
+	debug_menu.setup(self)
+	overlay.add_child(debug_menu)
+	paused = true
+	ui_blocking = true
+
 func _unhandled_input(ev: InputEvent) -> void:
+	if ev.is_action_pressed("debug"):
+		get_viewport().set_input_as_handled()
+		toggle_debug()
+		return
 	if ev.is_action_pressed("pause") and pause_menu == null and recap == null and not ui_blocking:
 		get_viewport().set_input_as_handled()
 		open_pause()

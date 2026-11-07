@@ -72,3 +72,12 @@
 - UI pass: one shared theme everywhere, focus-following scroll lists, wrapped paragraphs, fixed overlay sizing, polygon fixes (no more triangulation errors).
 - Saves: meta, settings, and mid-run resume ("Continue descent" / `--continue`).
 - Tests: every SFX renders, music layers loop in sync, audio API is safe headless, rebinding and binding persistence, default controls, settings round trip, colour-blind palette swap, feel sliders, mid-run resume restores room, build, gold and weapon.
+
+## Phase 10 — Debug menu, bot, balance, screenshots, export, README
+- F1 debug menu (`ui/debug_menu.gd`): jump to any depth/room type, spawn any enemy with any elite modifiers, guardians and bosses, grant boons and weapons, god mode, one-hit kills, freeze AI, overlays for hitboxes, AI states and telegraph shapes, plus heal/gold/Embers/Overdrive helpers.
+- Headless bot (`bot/bot_brain.gd`, `bot/bot_runner.gd`, `tools/run_bot.sh`): plays full runs, reports crashes, soft-locks, room times, damage per source, killers and win rate, writes a JSON report, exits 1 on any crash or soft-lock.
+- Balance pass from bot data (see DECISIONS.md) and two bugs it found (Thorn Warden corner soft-lock, guardian stuck invulnerable).
+- Screenshots (`tools/screenshots.gd` under xvfb): doors, boss telegraph, death recap, boon choice, the Wick, settings, debug menu, depth 3 and depth 4 boss fights — saved in `screenshots/`.
+- Linux export preset (`export_presets.cfg`) → `build/linux/lanternfall.x86_64` with the `.pck` embedded; command-line flags `--new-run`, `--continue`, `--daily`, `--weapon=<id>`, `--depth=<n>`.
+- README with run instructions, controls, debug keys, phase summary, simplifications, known issues, asset replacement and the verification results.
+- Final: check_all 0 errors, 115 tests passing, bot 20/20 runs without crashes or soft-locks (16 wins).

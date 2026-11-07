@@ -232,3 +232,14 @@ func test_sparkmites_shake_off() -> void:
 	s.step(press("dash"), 1.0 / 60.0)
 	s.step(InputFrame.new(), 1.0 / 60.0)
 	check(not m.data.get("latched", false), "dashing shakes it off")
+
+func test_guardian_never_stuck_invulnerable() -> void:
+	var s := make_sim()
+	s.god_mode = true
+	var g := Enemies.spawn(s, "mini_thornback", Vector2(300, 0), 1, {"portal": false})
+	g.hp = g.max_hp * 0.45
+	steps(s, 3)
+	check(g.invuln, "roaring")
+	Status.freeze(s, g)
+	steps(s, 120)
+	check(not g.invuln, "a freeze during the roar does not leave the guardian invulnerable")

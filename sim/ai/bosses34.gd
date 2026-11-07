@@ -131,7 +131,7 @@ class EclipsedKnight extends BossBrain:
 		if e.data.get("guard", false) and not h.is_dot and h.slot in ["attack", "dash", "special"]:
 			sim.fire(&"reflected", {"id": e.id, "pos": e.pos})
 			if sim.player.pos.distance_to(e.pos) < 280.0:
-				Combat.hurt_player(sim, dmg(e, 0.6), e.pos, e, "Eclipse Riposte")
+				Combat.hurt_player(sim, dmg(e, 0.4), e.pos, e, "Eclipse Riposte")
 			return true
 		return false
 	func atk_slash(sim, e: SimEnemy, dt: float, t: float) -> bool:
@@ -173,7 +173,7 @@ class VoidMatron extends BossBrain:
 			w.t = float(w.t) - dt
 			var to: Vector2 = w.pos - sim.player.pos
 			if to.length() < 240.0 and sim.player.state != SimPlayer.St.DASH:
-				sim.player.kvel += to.normalized() * 1300.0 * dt
+				sim.player.kvel += to.normalized() * 1000.0 * dt
 			if to.length() < 40.0:
 				Combat.hurt_player(sim, dmg(e), w.pos, e, "Void Well")
 			if float(w.t) > 0.0:

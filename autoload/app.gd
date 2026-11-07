@@ -8,6 +8,7 @@ var args := {}
 var headless := false
 var main = null              # scenes/main.gd registers itself
 var meta: Dictionary = {}    # persistent progress (see sim/meta.gd)
+var debug := {"hitboxes": false, "ai": false, "tele": false}
 
 func default_settings() -> Dictionary:
 	return {

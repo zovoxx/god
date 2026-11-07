@@ -195,6 +195,48 @@ func _draw_over(ci: CanvasItem) -> void:
 	_draw_beams(ci)
 	_draw_enemy_info(ci)
 	_draw_player_clarity(ci)
+	_draw_debug(ci)
+
+## debug overlays (F1 menu): hitboxes, AI states, raw telegraph shapes
+func _draw_debug(ci: CanvasItem) -> void:
+	var D: Dictionary = App.debug
+	var font := ThemeDB.fallback_font
+	if D.hitboxes:
+		var p := sim.player
+		ci.draw_arc(ipos(p), p.radius, 0, TAU, 24, Color(0, 1, 0, 0.8), 1.5)
+		ci.draw_arc(ipos(p), p.hit_radius, 0, TAU, 16, Color(1, 1, 0, 1), 2.0)
+		for e in sim.enemies:
+			if e.alive:
+				ci.draw_arc(ipos(e), e.radius, 0, TAU, 24, Color(1, 0.2, 0.2, 0.9), 1.5)
+		for pr in sim.projectiles:
+			ci.draw_arc(pr.pos, pr.radius, 0, TAU, 12, Color(1, 1, 1, 0.9) if pr.team == 0 else Color(1, 0, 1, 0.9), 1.5)
+		for pl in sim.arena.pillars:
+			ci.draw_arc(pl.pos, pl.r, 0, TAU, 24, Color(0, 0.6, 1, 0.8), 1.5)
+	if D.ai:
+		for e in sim.enemies:
+			if e.alive:
+				var txt := "%s st%d t%.1f cd%.1f%s%s" % [e.kind, e.st, e.t, e.cd, " TELE" if e.tele != null else "", " STAG" if e.staggered() else ""]
+				ci.draw_string_outline(font, ipos(e) + Vector2(-60, e.radius + 34), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, 4, Color.BLACK)
+				ci.draw_string(font, ipos(e) + Vector2(-60, e.radius + 34), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color("#7fd4ff"))
+	if D.tele:
+		for t in sim.telegraphs:
+			if t.resolved:
+				continue
+			var c := Color(0, 1, 1, 0.9)
+			match t.shape:
+				Tele.Shape.CIRCLE: ci.draw_arc(t.pos, t.radius, 0, TAU, 32, c, 1.5)
+				Tele.Shape.RING:
+					ci.draw_arc(t.pos, t.radius, 0, TAU, 32, c, 1.5)
+					ci.draw_arc(t.pos, t.inner, 0, TAU, 32, c, 1.5)
+				Tele.Shape.CONE:
+					ci.draw_line(t.pos, t.pos + Geom.dir(t.angle - t.arc * 0.5) * t.radius, c, 1.5)
+					ci.draw_line(t.pos, t.pos + Geom.dir(t.angle + t.arc * 0.5) * t.radius, c, 1.5)
+					ci.draw_arc(t.pos, t.radius, t.angle - t.arc * 0.5, t.angle + t.arc * 0.5, 16, c, 1.5)
+				Tele.Shape.LINE:
+					var dv := Geom.dir(t.angle)
+					var n = dv.orthogonal() * t.width * 0.5
+					ci.draw_polyline(PackedVector2Array([t.pos + n, t.pos + dv * t.length + n, t.pos + dv * t.length - n, t.pos - n, t.pos + n]), c, 1.5)
+			ci.draw_string(font, t.pos + Vector2(4, -4), "%s %.2fs" % [t.attack_name, t.time_left()], HORIZONTAL_ALIGNMENT_LEFT, -1, 13, c)
 
 ## doors on the top wall (lit one by one), the spring and the ordeal altar
 func _draw_room_props(ci: CanvasItem) -> void:

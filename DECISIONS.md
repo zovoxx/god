@@ -107,3 +107,10 @@ Each entry: what was decided and why.
 - Audio is disabled in headless mode and in the bot; every audio call is a safe no-op there.
 - Settings are saved to `user://settings.json` on every change; bindings are saved as serialised events and re-installed at startup. Rebinding replaces the keyboard *or* the gamepad binding of an action, keeping the other.
 - Saves: `user://meta.json` (Wick progress), `user://settings.json`, `user://run.json` (the run in progress: written when entering each room and on quit, deleted when a run ends).
+
+## Bot, balance, export (phase 10)
+- The bot only uses what a player sees (telegraph shapes and timing, projectiles, hazards, beams, gravity wells, HP) and sends the same InputFrames as a device. By default it plays with a fully unlocked Wick so every system is exercised; `--fresh` plays a new save.
+- A soft-lock is "no new room for 240 s of game time". If the bot can't walk into a lit door for 10 s (e.g. stuck behind a pillar) the runner walks it through and counts a "navigation assist"; none happened in the final runs.
+- Balance changes from bot data: depth damage multipliers 1.0 / 1.3 / 1.5 / 1.6 (was 1.0 / 1.2 / 1.4 / 1.65: depths 1–3 never killed the bot, depth 4 always did); mirror/eclipse reflections 60 % → 40 %; Gravewell pull 1500 → 1100 and Void Matron wells 1300 → 1000; Slagcrawler slag 6 → 5 damage and 4 → 3 s; Prism sweep 1.2 → 1.6 s; the Thorn Warden's shield is down while it swipes (it used to be possible to pin one in a corner forever).
+- Found by the bot: a freeze or counter during a guardian's phase roar could leave it permanently invulnerable — boss brains now always clear invulnerability in their neutral state (regression test added).
+- The export embeds the `.pck`; `tests/`, `tools/*.py` and `screenshots/` are excluded. `screenshots/` has a `.gdignore` so the editor never imports the images.

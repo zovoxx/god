@@ -91,7 +91,7 @@ class MirrorKnight extends Brain:
 		if e.data.get("guard", false) and not h.is_dot and h.slot in ["attack", "dash", "special"]:
 			sim.fire(&"reflected", {"id": e.id, "pos": e.pos})
 			if sim.player.pos.distance_to(e.pos) < 260.0:
-				Combat.hurt_player(sim, AIDepth4.dmg(e) * 0.6, e.pos, e, "Mirror Riposte")
+				Combat.hurt_player(sim, AIDepth4.dmg(e) * 0.4, e.pos, e, "Mirror Riposte")
 			return true
 		return false
 
@@ -108,7 +108,7 @@ class Gravewell extends Brain:
 			var p: SimPlayer = sim.player
 			var to: Vector2 = well - p.pos
 			if to.length() < 260.0 and p.state != SimPlayer.St.DASH:
-				p.kvel += to.normalized() * 1500.0 * dt
+				p.kvel += to.normalized() * 1100.0 * dt
 			if to.length() < 42.0:
 				Combat.hurt_player(sim, AIDepth4.dmg(e), well, e, "Crushing Core")
 			if float(e.data.well_t) <= 0.0:
@@ -132,14 +132,14 @@ class Prism extends Brain:
 	func update(sim, e: SimEnemy, dt: float) -> void:
 		e.vel = Vector2.ZERO
 		if e.data.has("sweep_t"):
-			var k := float(e.data.sweep_t) / 1.2
+			var k := float(e.data.sweep_t) / 1.6
 			var ang: float = float(e.data.a0) + float(e.data.arc) * (k - 0.5)
 			e.data["beam_a"] = ang
 			var end: Vector2 = e.pos + Geom.dir(ang) * 520.0
 			if Geom.seg_dist(sim.player.pos, e.pos, end) < 14.0 + sim.player.hit_radius:
 				Combat.hurt_player(sim, AIDepth4.dmg(e), e.pos, e, "Prism Beam")
 			e.data["sweep_t"] = float(e.data.sweep_t) + dt
-			if float(e.data.sweep_t) >= 1.2:
+			if float(e.data.sweep_t) >= 1.6:
 				e.data.erase("sweep_t")
 				e.data.erase("beam_a")
 				e.cd = 3.0 * e.cd_mul

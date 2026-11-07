@@ -19,7 +19,7 @@ static func deal(sim, e: SimEnemy, h: HitInfo) -> float:
 	if e.brain != null and not h.is_dot and e.brain.on_hit(sim, e, h):
 		return 0.0
 	# frontal shields block hits from the front (not damage over time)
-	if e.front_shield > 0.0 and not h.is_dot and h.slot != "cast" and e.can_act():
+	if e.front_shield > 0.0 and not h.is_dot and h.slot != "cast" and e.can_act() and e.st == 0:
 		var from := (h.src - e.pos).angle()
 		if absf(Geom.angle_diff(e.facing, from)) < e.front_shield * 0.5 and h.armor_break < 2.0:
 			e.kvel += h.dir * 120.0

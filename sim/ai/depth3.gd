@@ -205,7 +205,7 @@ class Slagcrawler extends Brain:
 		e.cd -= dt
 		if e.cd <= 0.0 and e.vel.length() > 60.0:
 			e.cd = 0.22
-			var hz := Hazards.enemy_field(sim, e, e.pos, 24.0, AIDepth3.windup(e), 4.0, AIDepth3.dmg(e), "Molten Slag", "slag")
+			var hz := Hazards.enemy_field(sim, e, e.pos, 24.0, AIDepth3.windup(e), 3.0, AIDepth3.dmg(e), "Molten Slag", "slag")
 			hz.name = e.name
 			hz.art = e.art
 

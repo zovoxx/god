@@ -71,6 +71,8 @@ pacing = {
 "wave_max_time": 13.0,
 "reward_magnet_delay": 0.25,
 "door_light_interval": 0.22,
+"transition_in": 0.25,
+"transition_out": 0.25,
 "death_recap_delay": 0.85,
 "max_idle": 0.6,
 "enemy_min_windup": 0.35,
@@ -281,4 +283,34 @@ elites = {
 "mending": {"name": "Mending", "color": "#5dff9a", "desc": "Regenerates when left alone.", "delay": 2.0, "rate": 0.04},
 "base_pool": ["hasted", "shielded", "volatile", "blazing", "hulking", "vampiric", "mending"],
 "deep_pool": ["blinking", "orbiting", "brood"]
+}
+meta = {
+"keepsakes": {
+"k_charm": {"name": "Lucky Moth", "desc": "+5% critical chance.", "mods": [["crit_chance", 0.05]]},
+"k_feather": {"name": "Swift Feather", "desc": "Move 8% faster.", "mods": [["move_speed", 0.08]]},
+"k_locket": {"name": "Iron Locket", "desc": "+15 max health.", "mods": [["max_hp", 15.0]]},
+"k_whetstone": {"name": "Whetstone", "desc": "Attacks deal +10% damage.", "mods": [["attack_dmg", 0.1]]},
+"k_ember": {"name": "Ember Coin", "desc": "+20% gold from every source.", "mods": [["gold_gain", 0.2]]},
+"k_shell": {"name": "Tide Shell", "desc": "Take 8% less damage.", "mods": [["damage_taken", -0.08]]}
+}
+}
+rooms = {
+"steps": ["combat", "choice", "choice", "guardian", "choice", "boss"],
+"reward_weights": {"boon": 58, "forge": 12, "kindle": 12, "heart": 9, "gold": 9},
+"type_weights": {"combat": 55, "elite": 20, "shop": 12, "spring": 6, "ordeal": 10},
+"choice_three_chance": 0.55,
+"guardians": {"1": ["mini_thornback", "mini_bloom"], "2": ["mini_librarian", "mini_deepmaw"], "3": ["mini_riveter", "mini_foreman"], "4": ["mini_eclipse", "mini_matron"]},
+"bosses": {"1": "boss_stag", "2": "boss_archivist", "3": "boss_engine", "4": "boss_regent"},
+"hazards": {"1": "vent", "2": "pool", "3": "spikes", "4": "rift"},
+"hazard_names": {"vent": "Ember Vent", "pool": "Brine Pool", "spikes": "Piston Spikes", "rift": "Void Rift"},
+"hazard_dmg": 8.0,
+"hazard_cycle": 4.0,
+"hazard_active": 1.2,
+"ordeals": {
+"altar": {"name": "Altar of Embers", "desc": "Offer %d max health for an Epic boon.", "hp_cost_frac": 0.15},
+"gauntlet": {"name": "The Gauntlet", "desc": "Survive four fierce waves. Win a Legendary-chance boon and %d gold.", "gold": 120},
+"wager": {"name": "The Wager", "desc": "Stake %d gold. Clear this room taking less than %d damage to win double, and a boon.", "stake": 60, "max_damage": 20}
+},
+"spring_heal_frac": 0.4,
+"door_spacing": 260.0
 }

@@ -232,6 +232,8 @@ static func hurt_player(sim, dmg: float, src: Vector2, source, attack_name: Stri
 		sim.damage_log.pop_front()
 	if sim.run != null:
 		sim.run.on_player_hurt(entry)
+	if sim.flow != null:
+		sim.flow.on_hurt(d)
 	sim.fire(&"player_hurt", {"dmg": d, "absorbed": absorbed, "src": src, "dir": dir, "source": sname, "attack": attack_name, "art": art, "hp": p.hp, "max_hp": p.max_hp, "before": before})
 	if source != null and source is SimEnemy and source.has_elite("vampiric"):
 		source.hp = minf(source.max_hp, source.hp + d * 2.0)

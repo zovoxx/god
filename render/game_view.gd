@@ -8,6 +8,8 @@ const FxView := preload("res://render/fx_view.gd")
 const Hud := preload("res://ui/hud.gd")
 const PauseMenu := preload("res://ui/pause_menu.gd")
 const DeathRecap := preload("res://ui/death_recap.gd")
+const OfferScreen := preload("res://ui/offer_screen.gd")
+const ShopScreen := preload("res://ui/shop_screen.gd")
 
 signal request_restart
 signal request_wick
@@ -44,13 +46,96 @@ func _ready() -> void:
 	overlay.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(overlay)
 	Bus.player_died.connect(_on_player_died)
+	Bus.event.connect(_on_bus)
+	var fade_layer := CanvasLayer.new()
+	fade_layer.layer = 15
+	add_child(fade_layer)
+	fade = ColorRect.new()
+	fade.color = Color(0, 0, 0, 1)
+	fade.set_anchors_preset(Control.PRESET_FULL_RECT)
+	fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fade_layer.add_child(fade)
+
+var fade: ColorRect
+var choice = null
+signal run_finished(data: Dictionary)
+
+func _on_bus(name: StringName, d: Dictionary) -> void:
+	if sim == null:
+		return
+	match name:
+		&"room_entered":
+			world.rebuild_room(int(d.seed))
+			cam.snap_to(sim.player.pos)
+			fade.color.a = 1.0
+			create_tween().tween_property(fade, "color:a", 0.0, float(Cfg.T.pacing.get("transition_in", 0.25)))
+			if int(d.step) == 0:
+				Bus.fire(&"banner", {"text": String(d.name).to_upper(), "sub": "Depth %d" % int(d.depth), "col": Palettes.get_depth(int(d.depth) - 1).accent, "life": 2.4, "big": true})
+		&"door_entered":
+			create_tween().tween_property(fade, "color:a", 1.0, 0.25)
+			Audio.play("door")
+		&"offer_opened":
+			_open_choice(String(d.kind))
+		&"run_ended":
+			_on_run_ended(d)
+		&"autosave":
+			if App.main != null and App.main.has_method("autosave"):
+				App.main.autosave(d.run)
+		&"room_cleared":
+			cam.zoom_punch(float(Cfg.F.room_clear.boss_zoom_punch if d.boss else Cfg.F.room_clear.zoom_punch))
+			Audio.play("room_clear")
+		&"door_lit":
+			Audio.play("door_lit", 1.0 + int(d.index) * 0.12)
+
+func _open_choice(kind: String) -> void:
+	_close_choice()
+	var flow: RoomFlow = sim.flow
+	if kind == "shop":
+		var sh := ShopScreen.new()
+		sh.setup(flow)
+		sh.buy.connect(func(i):
+			if flow.buy(i):
+				Audio.play("buy")
+			else:
+				Audio.play("deny")
+			sh.refresh())
+		sh.leave.connect(func():
+			flow.leave_shop()
+			_close_choice())
+		choice = sh
+	else:
+		var os := OfferScreen.new()
+		os.setup(flow.offer, sim.run)
+		os.picked.connect(func(i):
+			_close_choice()
+			flow.choose(i))
+		os.reroll_requested.connect(func(fate):
+			if flow.reroll(fate):
+				Audio.play("reroll")
+			else:
+				Audio.play("deny"))
+		choice = os
+	overlay.add_child(choice)
+	ui_blocking = true
+	paused = true
+
+func _close_choice() -> void:
+	if choice != null:
+		choice.queue_free()
+		choice = null
+	ui_blocking = false
+	paused = false
+
+func _on_run_ended(d: Dictionary) -> void:
+	await get_tree().create_timer(float(Cfg.T.pacing.death_recap_delay) if not d.won else 1.6, true, false, true).timeout
+	run_finished.emit(d)
 
 var overlay: CanvasLayer
 var pause_menu = null
 var recap = null
 
 func _on_player_died(_d: Dictionary) -> void:
-	if sim == null or (sim.flow != null and sim.flow.handles_death()):
+	if sim == null or sim.flow != null:
 		return
 	await get_tree().create_timer(float(Cfg.T.pacing.death_recap_delay), true, false, true).timeout
 	show_recap(Recap.build(sim))
@@ -100,7 +185,13 @@ func _unhandled_input(ev: InputEvent) -> void:
 
 func start_sim(s: Sim) -> void:
 	sim = s
+	if sim.flow == null:
+		fade.color.a = 0.0
+	else:
+		create_tween().tween_property(fade, "color:a", 0.0, 0.35)
 	world.bind(sim)
+	if sim.run != null:
+		world.rebuild_room(int(sim.run.plan.get("seed", 0)))
 	cam.snap_to(sim.player.pos)
 	if fx != null:
 		fx.bind(sim)
@@ -151,4 +242,11 @@ func _process(delta: float) -> void:
 	if p.move_dir != Vector2.ZERO:
 		goal_look = (p.aim_dir * 0.6 + p.move_dir * 0.4) * la
 	cam.look = cam.look.lerp(goal_look, clampf(delta * 4.0, 0.0, 1.0))
+	cam.zoom_fit = 0.0
+	if sim.flow != null and sim.flow.state in [RoomFlow.S.DOORS, RoomFlow.S.SPRING, RoomFlow.S.EXIT]:
+		var r: Rect2 = sim.arena.rect
+		var vs := get_viewport_rect().size
+		cam.zoom_fit = minf(vs.x / (r.size.x + 160.0), vs.y / (r.size.y + 260.0))
+		cam.target = cam.target.lerp(r.get_center() + Vector2(0, -40), 0.6)
+		cam.look = Vector2.ZERO
 	cam.tick(delta, sim.fx_scale())

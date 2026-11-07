@@ -58,3 +58,13 @@ Each entry: what was decided and why.
 - Elite "Hasted" speeds movement and shortens cooldowns but never shortens telegraph windups below the minimums.
 - Velloran's Mirror Copies are optional enemies (the room clears without them) that cast twice and fade.
 - Scripts launched with `-s` can't statically reference classes that use autoloads, so tools and tests load their logic at runtime with `load()`.
+
+## Rooms and runs (phase 5)
+- Each depth has 6 rooms (combat → choice → choice → guardian → choice → boss), 24 rooms per full run; with ~45–75 s per room this lands in the 20–35 minute target.
+- Doors stand inside the top edge of the room; after a clear the camera eases out to show the whole room and lit doors get gold edge arrows when off-screen.
+- Room generation uses a hash of (run seed, room index, depth, step, salt), so door options, waves, shop stock and reward choices are reproducible for a seed (and for the Daily Descent) regardless of how long the player spent in earlier rooms.
+- The simulation pauses while a choice overlay (boon, forge, shop, ordeal) is open.
+- Ordeals: **Altar** trades 15 % max HP for an Epic boon; **Gauntlet** is a 4-wave elite fight for a Legendary-chance boon plus 120 gold; **Wager** stakes 60 gold — clear taking less than 20 damage to win double and the reward, otherwise both are lost.
+- After a boss: +30 % heal, then the next depth's doors. After the fourth boss the run is won.
+- Every depth has its own periodic floor hazard in combat rooms past the first (Ember Vents, Brine Pools, Piston Spikes, Void Rifts) that always warns for 0.7 s (two pulses) before it hurts.
+- Autosave happens on entering each room (and on quitting mid-room); "Continue" restarts the saved room from its beginning with the saved build.

@@ -35,3 +35,10 @@
 - Spawn portals drawn as swirls (purple for bosses), burrow mounds, hop arcs, lob arcs, tether/heal/sniper beams, explosions.
 - Procedural sprites for all 18 depth 1–2 enemies, 4 guardians and 2 bosses.
 - Tests: roster sizes, brain/sprite/tip coverage, every enemy telegraphs and resolves attacks in a soak, bosses cycle ≥3 named attacks in 30 s and change phase invulnerably, 6+ attacks per boss, each elite modifier and all pair combinations, volatile/brood/blinking/vampiric effects, wave determinism per seed, Deepening gating, waves run to a clear.
+
+## Phase 5 — Rooms, doors, room types and depth progression
+- `RunState` (build, currencies, position, modifiers, statistics; JSON round-trip), `Rooms` (deterministic door generation with depth/step rules, vows, recovery before bosses; 8 pillar layouts weighted per depth; depth hazards), `RoomFlow` (enter → waves/shop/spring/ordeal → clear slow-mo → magnet → reward orb → choice → doors lit one by one → next room; guardians, bosses, depth changes, victory, death, abandon).
+- `Offers`: forge, kindling, heartwood and gold choices with before/after values; shop stock (2 boons, heal, max HP, forge, reroll, Fate Die) with depth-scaled prices; ordeal prompts (Altar, Gauntlet, Wager); rerolls and Fate Dice.
+- Presentation: door arches on the top wall showing room type + reward icon + label, spring fountain, altar, fade transitions, depth title banners, camera framing for doors, door arrows; choice overlay with flip-in cards; shop overlay; title screen; victory screen; run save/continue; death recap after a run.
+- `tools/screenshots.gd` (+ `tools/shots_impl.gd`) with scenarios; `tools/fix_inference.py` dev helper.
+- Tests: deterministic doors per seed, door rules per step, No Springs vow, depth progression and HP/damage scaling, first room → doors, walking through a door, forge choice, rerolls, shop buying/prices, spring heal, Altar/Gauntlet/Wager outcomes and declining, guardian/boss rooms, hazards warn first, run JSON round-trip, and a scripted play-through of depths 1–2 defeating both bosses.

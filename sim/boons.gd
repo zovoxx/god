@@ -18,3 +18,20 @@ static func slot_of(id: String) -> String:
 
 static func describe(id: String, rarity: int, level: int) -> String:
 	return String(def(id).get("text", ""))
+
+static func apply(st: Stats, owned: Dictionary) -> void:
+	pass
+
+static func hex_of(id: String) -> String:
+	return "#ffffff"
+
+static func offer(sim, patron: String, rarity_bonus: int, count: int = 3, rng: RandomNumberGenerator = null) -> Dictionary:
+	return {}
+
+static func grant(sim, id: String, rarity: int) -> void:
+	pass
+
+static func patron(id: String) -> Dictionary:
+	if Cfg.B == null:
+		return {}
+	return Cfg.B.patrons.get(id, {})

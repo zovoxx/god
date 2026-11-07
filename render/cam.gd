@@ -8,12 +8,15 @@ var kick := Vector2.ZERO
 var kick_v := Vector2.ZERO
 var punch := 0.0
 var base_zoom := 1.4
+var zoom_fit := 0.0          # >0: ease out to this zoom (whole room visible)
+var _zoom_cur := 1.4
 var _t := 0.0
 var _noise := FastNoiseLite.new()
 
 func _ready() -> void:
 	base_zoom = float(Cfg.T.view.zoom)
 	zoom = Vector2.ONE * base_zoom
+	_zoom_cur = base_zoom
 	_noise.seed = 7
 	_noise.frequency = 1.0
 
@@ -46,4 +49,6 @@ func tick(delta: float, fx_scale: float) -> void:
 	offset = off + kick
 	rotation = _noise.get_noise_2d(_t, 50.0) * float(S.max_angle) * amp * 2.0
 	punch = maxf(0.0, punch - punch * float(Cfg.F.room_clear.zoom_decay) * delta)
-	zoom = Vector2.ONE * base_zoom * (1.0 + punch)
+	var goal_zoom := minf(base_zoom, zoom_fit) if zoom_fit > 0.0 else base_zoom
+	_zoom_cur = lerpf(_zoom_cur, goal_zoom, clampf(delta * 2.5, 0.0, 1.0))
+	zoom = Vector2.ONE * _zoom_cur * (1.0 + punch)

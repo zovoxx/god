@@ -7,6 +7,51 @@ static func register(A) -> void:
 	A.reg("i_lantern_off", Vector2(30, 40), _lantern_off)
 	A.reg("i_gold", Vector2(24, 24), func(ci): Paint.circ(ci, Vector2.ZERO, 9.0, Color("#ffd166")); ci.draw_circle(Vector2(-3, -3), 3.0, Color.WHITE))
 	A.reg("i_ember", Vector2(24, 24), func(ci): Paint.glow(ci, Vector2.ZERO, 10.0, Color("#ffe6a0")))
+	A.reg("i_heart", Vector2(40, 40), func(ci):
+		Paint.poly(ci, Paint.pts([0, 14, -14, 0, -14, -8, -7, -14, 0, -8, 7, -14, 14, -8, 14, 0]), Color("#ff5d7a"), 2.0)
+		ci.draw_circle(Vector2(-6, -6), 3.0, Color(1, 1, 1, 0.6)))
+	A.reg("i_heal", Vector2(40, 40), func(ci):
+		Paint.circ(ci, Vector2.ZERO, 13.0, Color("#5dff9a"), 2.0)
+		ci.draw_rect(Rect2(-3, -9, 6, 18), Color.WHITE)
+		ci.draw_rect(Rect2(-9, -3, 18, 6), Color.WHITE))
+	A.reg("i_forge", Vector2(40, 40), func(ci):
+		Paint.poly(ci, Paint.pts([-14, 4, 14, 4, 10, 12, -10, 12]), Color("#5a5060"), 2.0)
+		Paint.poly(ci, Paint.pts([-10, -2, 12, -2, 16, 4, -14, 4]), Color("#7a7080"), 2.0)
+		Paint.glow(ci, Vector2(0, -8), 7.0, Color("#ffb84a"), true))
+	A.reg("i_kindle", Vector2(40, 40), func(ci):
+		Paint.poly(ci, Paint.pts([0, -16, 8, -2, 6, 10, -6, 10, -8, -2]), Color("#ffd27a"), 2.0)
+		ci.draw_colored_polygon(Paint.pts([0, -6, 4, 2, 0, 8, -4, 2]), Color.WHITE))
+	A.reg("i_shop", Vector2(40, 40), func(ci):
+		Paint.poly(ci, Paint.pts([-12, -4, 12, -4, 10, 14, -10, 14]), Color("#8a6a4a"), 2.0)
+		ci.draw_arc(Vector2(0, -4), 8.0, PI, TAU, 10, Paint.OUT, 3.0)
+		ci.draw_circle(Vector2(0, 5), 4.0, Color("#ffd166")))
+	A.reg("i_spring", Vector2(40, 40), func(ci):
+		Paint.poly(ci, Paint.ell(Vector2(0, 6), 15, 7, 16), Color("#3a6a7a"), 2.0)
+		ci.draw_colored_polygon(Paint.ell(Vector2(0, 5), 11, 4, 14), Color("#4ff0ff"))
+		for i in 3:
+			ci.draw_line(Vector2(-6 + i * 6, 2), Vector2(-6 + i * 6, -12 + (i % 2) * 4), Color("#bff8ff"), 2.0))
+	A.reg("i_ordeal", Vector2(40, 40), func(ci):
+		Paint.poly(ci, Paint.pts([-12, 12, -8, -6, 8, -6, 12, 12]), Color("#5a4a6a"), 2.0)
+		Paint.glow(ci, Vector2(0, -10), 8.0, Color("#c07bff"), true))
+	A.reg("i_boss", Vector2(40, 40), func(ci):
+		Paint.circ(ci, Vector2(0, -2), 12.0, Color("#d8d0e8"), 2.0)
+		ci.draw_circle(Vector2(-5, -3), 3.5, Paint.OUT)
+		ci.draw_circle(Vector2(5, -3), 3.5, Paint.OUT)
+		ci.draw_rect(Rect2(-6, 7, 12, 5), Color("#d8d0e8"))
+		ArtBosses.crown(ci, Vector2(0, -14), 18.0))
+	A.reg("i_guardian", Vector2(40, 40), func(ci): ArtBosses.crown(ci, Vector2(0, 4), 26.0))
+	A.reg("i_reroll", Vector2(40, 40), func(ci):
+		ci.draw_arc(Vector2.ZERO, 11.0, 0.3, TAU - 0.6, 18, Color("#d8c8ff"), 4.0)
+		ci.draw_colored_polygon(Paint.pts([10, -10, 14, 2, 4, 0]), Color("#d8c8ff")))
+	A.reg("i_die", Vector2(40, 40), func(ci):
+		Paint.poly(ci, Paint.pts([-11, -11, 11, -11, 11, 11, -11, 11]), Color("#c07bff"), 2.0)
+		for p in [Vector2(-5, -5), Vector2(5, 5), Vector2(0, 0)]:
+			ci.draw_circle(p, 2.4, Color.WHITE))
+	A.reg("i_combat", Vector2(40, 40), func(ci):
+		Paint.line(ci, Vector2(-11, 11), Vector2(10, -10), Color("#e8eef8"), 3.0)
+		Paint.line(ci, Vector2(11, 11), Vector2(-10, -10), Color("#e8eef8"), 3.0))
+	A.reg("i_elite", Vector2(40, 40), func(ci):
+		Paint.poly(ci, Paint.star(Vector2.ZERO, 14.0, 6.0, 5), Color("#ffd166"), 2.0))
 	# boon slots (drawn as glyphs, tinted by the HUD)
 	A.reg("i_slot_attack", Vector2(24, 24), func(ci): Paint.poly(ci, Paint.pts([-8, 8, 6, -6, 9, -9, 6, -4, -6, 8]), Color.WHITE, 1.0))
 	A.reg("i_slot_special", Vector2(24, 24), func(ci): Paint.poly(ci, Paint.star(Vector2.ZERO, 10.0, 4.0, 4), Color.WHITE, 1.0))

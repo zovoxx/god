@@ -183,6 +183,7 @@ func _draw_under(ci: CanvasItem) -> void:
 			for i in 3:
 				var a := time * 6.0 + TAU * i / 3.0
 				ci.draw_arc(c, r * (0.4 + 0.5 * k), a, a + 1.2, 10, Color(col.lightened(0.3), 0.8), 3.0, true)
+	_draw_room_props(ci)
 	if fx != null:
 		fx.draw_under(ci, self)
 
@@ -194,6 +195,56 @@ func _draw_over(ci: CanvasItem) -> void:
 	_draw_beams(ci)
 	_draw_enemy_info(ci)
 	_draw_player_clarity(ci)
+
+## doors on the top wall (lit one by one), the spring and the ordeal altar
+func _draw_room_props(ci: CanvasItem) -> void:
+	var flow = sim.flow
+	if flow == null:
+		return
+	var font := ThemeDB.fallback_font
+	var plan: Dictionary = sim.run.plan
+	if plan.get("type", "") == "spring":
+		var used: bool = flow.spring_used
+		ci.draw_colored_polygon(Paint.ell(Vector2(0, 8), 84, 40, 28), Paint.OUT)
+		ci.draw_colored_polygon(Paint.ell(Vector2(0, 6), 78, 36, 28), Color("#2a4a5a"))
+		ci.draw_colored_polygon(Paint.ell(Vector2(0, 4), 66, 28, 28), Color(Cfg.col("pickup"), 0.25 if used else 0.75))
+		if not used:
+			for i in 5:
+				var a := time * 2.0 + TAU * i / 5.0
+				ci.draw_circle(Vector2(cos(a) * 40.0, sin(a) * 14.0 - 4.0 - fmod(time * 30.0 + i * 9.0, 30.0)), 3.0, Color(1, 1, 1, 0.7))
+			ci.draw_string_outline(font, Vector2(-80, -50), "Step in to heal", HORIZONTAL_ALIGNMENT_CENTER, 160, 20, 5, Color.BLACK)
+			ci.draw_string(font, Vector2(-80, -50), "Step in to heal", HORIZONTAL_ALIGNMENT_CENTER, 160, 20, Cfg.col("pickup"))
+	elif plan.get("type", "") == "ordeal" or plan.get("type", "") == "shop":
+		var col := Color("#c07bff") if plan.type == "ordeal" else Color("#ffd166")
+		ci.draw_rect(Rect2(-46, -20, 92, 46), Paint.OUT)
+		ci.draw_rect(Rect2(-42, -16, 84, 38), Color("#3a2e48"))
+		Paint.glow(ci, Vector2(0, -34), 20.0, col, true)
+	for i in flow.doors.size():
+		var d: Dictionary = flow.doors[i]
+		var lit: bool = i < flow.doors_lit
+		var info := DoorInfo.info(d.plan)
+		var pos: Vector2 = d.pos
+		var col: Color = info.color
+		var a := 1.0 if lit else 0.25
+		var frame := Paint.pts([pos.x - 50, pos.y + 4, pos.x - 50, pos.y - 40, pos.x - 34, pos.y - 66, pos.x, pos.y - 76, pos.x + 34, pos.y - 66, pos.x + 50, pos.y - 40, pos.x + 50, pos.y + 4])
+		ci.draw_colored_polygon(frame, Paint.OUT)
+		var inner := Paint.pts([pos.x - 40, pos.y + 4, pos.x - 40, pos.y - 36, pos.x - 28, pos.y - 56, pos.x, pos.y - 64, pos.x + 28, pos.y - 56, pos.x + 40, pos.y - 36, pos.x + 40, pos.y + 4])
+		ci.draw_colored_polygon(inner, Color(col.darkened(0.6), a))
+		if lit:
+			var pulse := 0.5 + 0.5 * sin(time * 4.0 + i)
+			ci.draw_circle(pos + Vector2(0, -26), 46.0 + pulse * 4.0, Color(col, 0.12))
+			ci.draw_polyline(inner + PackedVector2Array([inner[0]]), Color(col, 0.9), 3.0)
+		var icon: String = info.reward_icon if info.reward_icon != "" else info.type_icon
+		var it := Assets.tex(icon)
+		ci.draw_texture_rect(it, Rect2(pos + Vector2(-22, -50), Vector2(44, 44)), false, Color(1, 1, 1, a))
+		if info.reward_icon != "" and info.type_icon != "i_combat":
+			ci.draw_texture_rect(Assets.tex(info.type_icon), Rect2(pos + Vector2(18, -74), Vector2(26, 26)), false, Color(1, 1, 1, a))
+		var label: String = info.label
+		ci.draw_string_outline(font, pos + Vector2(-90, 30), label, HORIZONTAL_ALIGNMENT_CENTER, 180, 20, 6, Color(0, 0, 0, a))
+		ci.draw_string(font, pos + Vector2(-90, 30), label, HORIZONTAL_ALIGNMENT_CENTER, 180, 20, Color(col.lightened(0.3), a))
+		if info.sub != "":
+			ci.draw_string_outline(font, pos + Vector2(-90, 50), info.sub, HORIZONTAL_ALIGNMENT_CENTER, 180, 15, 5, Color(0, 0, 0, a))
+			ci.draw_string(font, pos + Vector2(-90, 50), info.sub, HORIZONTAL_ALIGNMENT_CENTER, 180, 15, Color(1, 1, 1, 0.8 * a))
 
 ## tether beams (Twinned Scribes), heal beams (Tideclerics)
 func _draw_beams(ci: CanvasItem) -> void:

@@ -9,3 +9,6 @@ func play(id: String, pitch: float = 1.0, vol_db: float = 0.0) -> void:
 
 func set_low_hp(on: bool) -> void:
 	pass
+
+func music_state(state: String) -> void:
+	pass

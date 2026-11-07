@@ -157,6 +157,11 @@ func _draw_offscreen(vs: Vector2) -> void:
 			if (ppos - pr.pos).dot(pr.vel) > 0.0 and Geom.seg_dist(ppos, pr.pos, ahead) < 140.0:
 				threats.append([pr.pos, Cfg.col("danger_hot"), 0.7, false])
 	var rect := Rect2(Vector2.ZERO, vs).grow(-margin)
+	# lit doors off-screen get gold arrows (yours, not a threat)
+	if sim.flow != null:
+		for i in sim.flow.doors.size():
+			if i < sim.flow.doors_lit:
+				threats.append([sim.flow.doors[i].pos, Cfg.col("player_gold"), 1.1, false])
 	for t in threats:
 		var sp: Vector2 = xf * t[0]
 		if Rect2(Vector2.ZERO, vs).grow(-10).has_point(sp):
@@ -242,9 +247,9 @@ func _draw_abilities(vs: Vector2) -> void:
 	draw_rect(Rect2(Vector2(ox + 2, origin.y + 10), Vector2((ow - 4) * of, 14)), oc)
 	if p.overdrive_ready:
 		draw_rect(Rect2(Vector2(ox, origin.y + 8), Vector2(ow, 18)), Color(1, 1, 1, 0.3 + 0.3 * sin(time * 8.0)), false, 2.0)
-		_txt(Vector2(ox + 8, origin.y + 24), "OVERDRIVE — SPECIAL READY", 14, Color.BLACK, HORIZONTAL_ALIGNMENT_LEFT, -1, 0)
+		_txt(Vector2(ox, origin.y + 2), "OVERDRIVE · SPECIAL EMPOWERED", 15, Cfg.col("player_gold"))
 	else:
-		_txt(Vector2(ox + 8, origin.y + 24), "OVERDRIVE", 14, Color(1, 1, 1, 0.75))
+		_txt(Vector2(ox, origin.y + 2), "OVERDRIVE", 15, Color(1, 1, 1, 0.75))
 
 func _ring(c: Vector2, r: float, k: float, col: Color, label: String) -> void:
 	draw_circle(c, r + 3.0, Color(0, 0, 0, 0.75))

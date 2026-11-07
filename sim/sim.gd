@@ -35,6 +35,10 @@ var weapon = null
 var run = null                   # RunState
 var flow = null                  # RoomFlow
 var input := InputFrame.new()
+var damage_log: Array = []       # last hits the player took (pause screen, death recap)
+var streak_kills := 0
+var streak_timer := 0.0
+var streak_tier := 0
 
 # debug
 var god_mode := false
@@ -99,7 +103,7 @@ func fx_scale() -> float:
 
 # ───────────────────────── hit-stop & slow-mo ─────────────────────────
 
-## Requests a hit-stop. Capped per rolling second so fast weapons stay fluid. Returns applied.
+## Requests a hit-stop. Capped per rolling second so fast weapons stay fluid. Returns the time added.
 func request_hitstop(amount: float) -> float:
 	amount *= Cfg.hitstop_mul
 	if amount <= 0.0:
@@ -122,7 +126,7 @@ func request_hitstop(amount: float) -> float:
 		hitstop = allowed
 		hitstop_log.append([real_time, add])
 		fire(&"hitstop", {"amount": allowed})
-		return allowed
+		return add
 	return 0.0
 
 func hitstop_for_power(power: float, crit: bool, kill: bool) -> float:
@@ -233,6 +237,11 @@ func random_free_point(min_d: float, max_d: float, from: Vector2, r: float) -> V
 		if not point_blocked(p, r + 4.0) and p.distance_to(player.pos) >= min_d:
 			return p
 	return rect.get_center()
+
+func equip_weapon(id: String, forges: Dictionary = {}) -> void:
+	weapon = Weapons.make(id)
+	weapon.setup(self, forges)
+	player.wstate.clear()
 
 # ───────────────────────── derived player numbers ─────────────────────────
 

@@ -23,3 +23,12 @@ Each entry: what was decided and why.
 - Aim mode "auto" switches to whichever device was used last (mouse motion/click → mouse aim; any pad input → stick aim). Settings can force mouse, stick or pure auto-aim.
 - Mouse aim snaps softly to an enemy within 14° of the cursor direction; stick aim does the same around the stick direction and falls back to the auto-aim cone (65°, plus anything within 90 units) in the movement direction when the right stick is idle.
 - The 150 ms input buffer applies to attack, special, dash and Sigil. Dash can cancel attack *recovery* (not windup/active). An attack within 0.18 s of a dash ending becomes the weapon's dash-attack.
+
+## Combat (phase 2)
+- Combo chaining: the next combo step can start once `chain_at` (35–40 %) of the current recovery has elapsed; holding attack auto-repeats (except the bow, where holding charges a power shot).
+- Hits only stagger an enemy that is *not* mid-attack (no active telegraph) and whose hit power is ≥ 0.18. Interrupting an attack needs a **counter** (hit during the white flash) or breaking armor. This keeps fast weapons from perma-stunning everything while making counters meaningful.
+- `request_hitstop` keeps a rolling 1-second log; total hit-stop in any second is capped at `budget_per_second` (0.32 s) and a new stop can't start within 30 ms of the last one ending.
+- Hit sparks are white/gold (crit gold) so red/orange stays reserved for threats; enemies only shed their own body colour as shards when they die.
+- **Pickups always carry a cyan halo** (the pickup colour), whatever their core: gold coins, Embers, HP orbs, the reward orb.
+- Halo: one chakram in flight at a time (two with Twin Halos); attack input is ignored until it returns.
+- Weapon forges: exactly 3 per weapon (the spec), plus 5 generic forges shared by all weapons.

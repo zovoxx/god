@@ -236,3 +236,9 @@ forges = {
 "gKeen": {"weapon": "", "name": "Keen Eye", "desc": "+6% critical chance.", "max": 3, "stat": "crit_chance", "per": 0.06},
 "gSigil": {"weapon": "", "name": "Deep Sigil", "desc": "Sigil +1 charge and +15% radius.", "max": 1, "stat": "cast_charges", "per": 1.0}
 }
+enemies = {
+"dummy": {"name": "Straw Kindling", "depth": 0, "roles": [], "hp": 400, "speed": 0, "radius": 20, "mass": 3.0, "dmg": 0, "cost": 0, "art": "dummy", "blood": "#d8c08a", "tip": "A training dummy. It refills itself.", "regen": 60.0},
+"dummy_walker": {"name": "Straw Walker", "depth": 0, "roles": [], "hp": 220, "speed": 70, "radius": 18, "mass": 1.5, "dmg": 0, "cost": 0, "art": "dummy", "blood": "#d8c08a", "tip": "A training dummy that wanders.", "regen": 40.0}
+}
+bosses = {}
+elites = {}

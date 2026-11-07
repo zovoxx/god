@@ -22,7 +22,19 @@ func start_test_room() -> void:
 	add_child(game)
 	var s := Sim.new(1234, Bus)
 	s.set_arena(Rect2(-620, -380, 1240, 760), [{"pos": Vector2(-300, -120), "r": 40.0}, {"pos": Vector2(300, 120), "r": 40.0}], 0)
+	s.equip_weapon(String(App.arg("weapon", "fangs")))
+	for p in [Vector2(200, -100), Vector2(260, 0), Vector2(200, 100)]:
+		Enemies.spawn(s, "dummy", p, 1)
+	for p in [Vector2(-200, 150), Vector2(-250, -150)]:
+		Enemies.spawn(s, "dummy_walker", p, 1)
 	game.start_sim(s)
+
+func _unhandled_input(ev: InputEvent) -> void:
+	# training room: number keys swap weapons
+	if game != null and game.sim != null and ev is InputEventKey and ev.pressed and not ev.echo and game.sim.run == null:
+		var i: int = ev.keycode - KEY_1
+		if i >= 0 and i < Weapons.IDS.size():
+			game.sim.equip_weapon(Weapons.IDS[i])
 
 func _clear() -> void:
 	if game != null:

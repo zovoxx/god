@@ -4,6 +4,7 @@ extends Node2D
 
 const WorldView := preload("res://render/world_view.gd")
 const Cam := preload("res://render/cam.gd")
+const FxView := preload("res://render/fx_view.gd")
 
 var sim: Sim
 var world
@@ -21,6 +22,11 @@ func _ready() -> void:
 	cam = Cam.new()
 	add_child(cam)
 	cam.make_current()
+	fx = FxView.new()
+	fx.cam = cam
+	fx.world = world
+	world.fx = fx
+	add_child(fx)
 
 func start_sim(s: Sim) -> void:
 	sim = s

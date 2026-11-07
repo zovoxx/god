@@ -121,6 +121,7 @@ static func start_dash(sim, p: SimPlayer) -> void:
 	p.dash_speed = sim.dash_distance() / dur
 	p.dash_iframes = T.dash.iframes
 	p.dash_started_at = sim.time
+	p.dash_from = p.pos
 	p.dash_hit.clear()
 	if p.dash_charges == p.dash_max:
 		p.dash_cd = sim.dash_cooldown()

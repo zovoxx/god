@@ -26,6 +26,7 @@ var dash_iframes := 0.0
 var dash_started_at := -99.0
 var dash_ended_at := -99.0
 var dash_hit := {}               # enemy ids touched by this dash (dash-through boons)
+var dash_from := Vector2.ZERO
 
 # hurt
 var hurt_iframes := 0.0
@@ -39,6 +40,8 @@ var atk_t := 0.0
 var atk := {}                    # current frame data
 var atk_hits := {}               # enemy id -> true for this swing
 var atk_is_dash := false
+var atk_dir := Vector2.RIGHT
+var atk_cur := 0
 var combo_timer := 0.0
 var queued_attack := false
 
@@ -73,6 +76,9 @@ func setup(T: Tuning) -> void:
 
 func is_invuln() -> bool:
 	return dash_iframes > 0.0 or hurt_iframes > 0.0 or invuln_t > 0.0 or state == St.DEAD
+
+func dash_origin() -> Vector2:
+	return dash_from
 
 func is_dashing() -> bool:
 	return state == St.DASH

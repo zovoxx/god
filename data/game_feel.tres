@@ -1,0 +1,222 @@
+[gd_resource type="Resource" script_class="GameFeel" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://config/game_feel.gd" id="1_gf"]
+
+[resource]
+script = ExtResource("1_gf")
+hitstop = {
+"min": 0.04,
+"max": 0.09,
+"crit_bonus": 0.012,
+"kill_bonus": 0.014,
+"cooldown": 0.03,
+"budget_per_second": 0.32,
+"fx_speed_during_stop": 0.12,
+"hurt": 0.07,
+"finisher": 0.16,
+"counter": 0.12
+}
+slowmo = {
+"last_kill_scale": 0.18,
+"last_kill_duration": 0.55,
+"boss_kill_scale": 0.1,
+"boss_kill_duration": 1.3,
+"death_scale": 0.25,
+"death_duration": 0.7,
+"defied_scale": 0.15,
+"defied_duration": 0.9,
+"perfect_dash_scale": 0.3,
+"perfect_dash_duration": 0.4,
+"ease_out": 0.45
+}
+shake = {
+"trauma_per_power": 0.32,
+"trauma_crit": 0.12,
+"trauma_kill": 0.1,
+"trauma_hurt": 0.55,
+"trauma_explosion": 0.5,
+"trauma_boss_slam": 0.7,
+"max_offset": 18.0,
+"max_angle": 0.028,
+"decay": 2.6,
+"kick_per_power": 9.0,
+"kick_spring": 220.0,
+"kick_damping": 18.0,
+"frequency": 32.0
+}
+flash = {
+"duration": 0.085,
+"crit_duration": 0.12,
+"player_hurt": 0.12
+}
+knockback = {
+"base": 520.0,
+"friction": 11.0,
+"slam_speed": 380.0,
+"slam_damage_frac": 0.35,
+"slam_min_damage": 6.0
+}
+hitstun = {
+"min": 0.1,
+"max": 0.32
+}
+squash = {
+"amount": 0.38,
+"freq": 26.0,
+"damp": 11.0,
+"player_dash": 0.3,
+"player_attack": 0.16
+}
+particles = {
+"max": 1400,
+"hit_min": 5,
+"hit_max": 16,
+"hit_crit_extra": 8,
+"hit_cone": 0.9,
+"hit_speed_min": 160.0,
+"hit_speed_max": 620.0,
+"shards_min": 10,
+"shards_max": 22,
+"ember_burst": 8,
+"last_kill_burst": 60,
+"streak_mul": [1.0, 1.15, 1.35, 1.6, 1.9]
+}
+decals = {
+"max": 140,
+"hold": 5.0,
+"fade": 3.0
+}
+trails = {
+"slash_life": 0.13,
+"finisher_life": 0.2,
+"dash_ghosts": 4,
+"ghost_life": 0.22
+}
+damage_numbers = {
+"life": 0.7,
+"rise": 46.0,
+"pop_scale": 2.1,
+"pop_time": 0.11,
+"size": 26,
+"crit_size": 40,
+"critShake": 3.0,
+"merge_window": 0.38,
+"player_hurt_size": 30
+}
+streak = {
+"window": 2.6,
+"window_per_tier": -0.15,
+"tiers": [5, 12, 24, 40],
+"names": ["", "KINDLED", "BLAZING", "INFERNO", "SUPERNOVA"],
+"colors": ["#ffffff", "#ffd166", "#ff9a3d", "#ff5d8f", "#b48cff"],
+"damage_bonus": [0.0, 0.05, 0.1, 0.16, 0.24],
+"gold_per_kill": [0, 0, 1, 1, 2],
+"pitch_step": 0.05
+}
+audio = {
+"master": 0.8,
+"sfx": 0.9,
+"music": 0.5,
+"pitch_variation": 0.08,
+"combo_pitch_step": 0.07,
+"max_voices": 28,
+"retrigger": 0.028,
+"music_fade": 1.4,
+"low_hp_cutoff": 900.0
+}
+telegraph = {
+"flash_window": 0.12,
+"impact_flash": 0.14,
+"hazard_pulses": 2,
+"hazard_warn_time": 0.7,
+"fill_alpha": 0.32,
+"edge_alpha": 0.9,
+"glow_rate": 9.0
+}
+hurt = {
+"edge_flash_time": 0.35,
+"arc_time": 0.9,
+"arc_width_deg": 46.0,
+"shield_outline": true,
+"flicker_rate": 22.0,
+"hitbox_dot_radius": 220.0
+}
+hpbar = {
+"chip_delay": 0.5,
+"chip_drain_speed": 1.6,
+"heal_fill_speed": 1.2,
+"width": 420.0,
+"height": 26.0
+}
+low_hp = {
+"threshold": 0.25,
+"heartbeat_bpm": 92.0,
+"vignette_alpha": 0.42
+}
+perfect_dash = {
+"window": 0.15,
+"slowmo_scale": 0.3,
+"slowmo_duration": 0.4,
+"guaranteed_crit": true
+}
+counter = {
+"stagger": 1.1,
+"bonus_dmg": 0.5
+}
+finisher = {
+"hp_frac": 0.15,
+"dmg_mul": 3.0,
+"orbs": 2,
+"orb_heal": 3
+}
+room_clear = {
+"magnet_speed": 900.0,
+"magnet_accel": 2600.0,
+"arpeggio_notes": 6,
+"zoom_punch": 0.09,
+"boss_zoom_punch": 0.14,
+"zoom_decay": 5.0
+}
+arrows = {
+"margin": 46.0,
+"min_pulse": 1.5,
+"max_pulse": 9.0,
+"near_dist": 260.0,
+"far_dist": 1100.0,
+"projectile_lookahead": 0.6
+}
+camera = {
+"follow": 9.0
+}
+colors = {
+"danger": "#ff4a2a",
+"danger_core": "#ffd0a0",
+"danger_hot": "#ff8a1e",
+"danger_outline": "#1a0405",
+"player": "#fff4d6",
+"player_gold": "#ffc94a",
+"boss": "#b05cff",
+"pickup": "#4ff0ff",
+"heal": "#5dff9a",
+"barrier": "#5aa8ff",
+"crit": "#ffc21a",
+"status": "#ff8a3d",
+"hurt_number": "#ff3b4a",
+"white": "#ffffff"
+}
+colors_cb = {
+"danger": "#ff7b00",
+"danger_core": "#fff2c0",
+"danger_hot": "#ffb000",
+"danger_outline": "#000000",
+"player": "#ffffff",
+"player_gold": "#ffe14a",
+"boss": "#d27bff",
+"pickup": "#00c8ff",
+"heal": "#00e0c0",
+"barrier": "#3d7dff",
+"crit": "#ffe14a",
+"status": "#ffb000",
+"hurt_number": "#ff7b00",
+"white": "#ffffff"
+}

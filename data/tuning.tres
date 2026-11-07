@@ -1,0 +1,238 @@
+[gd_resource type="Resource" script_class="Tuning" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://config/tuning.gd" id="1_tun"]
+
+[resource]
+script = ExtResource("1_tun")
+view = {
+"zoom": 1.55,
+"follow": 9.0,
+"lookahead": 70.0,
+"lookahead_mouse": 0.18
+}
+player = {
+"radius": 15.0,
+"hit_radius": 8.0,
+"max_hp": 60,
+"max_speed": 345.0,
+"accel": 3600.0,
+"decel": 5200.0,
+"attack_move_mul": 0.3,
+"hurt_iframes": 0.8,
+"hurt_knock": 300.0,
+"hurt_lock": 0.06,
+"defy_heal_frac": 0.4,
+"defy_iframes": 1.6,
+"defy_push_radius": 220.0
+}
+dash = {
+"distance": 185.0,
+"duration": 0.13,
+"iframes": 0.2,
+"cooldown": 0.34,
+"charges": 1,
+"exit_speed_frac": 0.45,
+"dash_attack_window": 0.18
+}
+input = {
+"buffer": 0.15,
+"deadzone": 0.2,
+"aim_deadzone": 0.3
+}
+aim = {
+"cone_deg": 65.0,
+"close_radius": 90.0,
+"angle_weight": 1.25,
+"stickiness": 0.3,
+"mouse_snap_deg": 14.0,
+"max_range": 640.0
+}
+cast = {
+"charges": 2,
+"recharge": 3.6,
+"radius": 78.0,
+"delay": 0.32,
+"damage": 18.0,
+"root_time": 1.5,
+"range": 260.0,
+"power": 0.6
+}
+crit = {
+"base_chance": 0.04,
+"multiplier": 2.5,
+"mark_bonus": 0.25
+}
+pacing = {
+"first_wave_delay": 0.4,
+"spawn_portal": 0.42,
+"spawn_min_dist": 170.0,
+"spawn_max_dist": 380.0,
+"next_wave_at": 0.34,
+"wave_max_time": 13.0,
+"reward_magnet_delay": 0.25,
+"door_light_interval": 0.22,
+"death_recap_delay": 0.85,
+"max_idle": 0.6,
+"enemy_min_windup": 0.35,
+"boss_min_windup": 0.5
+}
+scaling = {
+"hp_by_depth": [1.0, 1.55, 2.25, 3.1],
+"dmg_by_depth": [1.0, 1.2, 1.4, 1.65],
+"hp_per_step": 0.05,
+"elite_hp": 1.9,
+"elite_dmg": 1.2,
+"boss_dmg": 0.72,
+"guardian_dmg": 0.85,
+"boss_hp": 1.0,
+"guardian_hp": 1.0
+}
+economy = {
+"gold_per_kill": [2, 3],
+"gold_elite_bonus": 6,
+"embers_per_room": 1,
+"embers_per_guardian": 4,
+"embers_per_boss": 10,
+"embers_win_bonus": 15,
+"ember_per_depth_reached": 3,
+"start_rerolls": 1,
+"start_defiance": 1,
+"shop_prices": {"boon": 120, "heal": 45, "heart": 90, "forge": 110, "reroll": 60, "fate_die": 80, "kindle": 100},
+"shop_price_depth_mul": 0.25,
+"spring_heal_frac": 0.4,
+"room_clear_heal": 0,
+"fate_die_rarity_bonus": 1
+}
+status = {
+"burn_dps": 2.2,
+"burn_max": 20,
+"burn_decay": 0.18,
+"chill_per_stack": 0.06,
+"chill_max": 10,
+"chill_decay": 1.2,
+"freeze_time": 1.4,
+"freeze_vuln": 0.4,
+"hex_time": 6.0,
+"hex_dmg_taken": 0.25,
+"hex_spread": 2,
+"hex_burst": 22.0,
+"hex_spread_radius": 200.0,
+"bleed_max": 12,
+"bleed_burst": 6.0,
+"bleed_burst_power": 0.7,
+"mark_time": 4.0,
+"jolt_chains": 2,
+"jolt_dmg": 10.0,
+"jolt_range": 170.0,
+"tide_knock": 0.6,
+"tide_slam_dmg": 18.0,
+"root_time": 1.5,
+"stagger_threshold": 0.18
+}
+overdrive = {
+"max": 100.0,
+"per_hit": 2.2,
+"per_kill": 4.0,
+"per_perfect_dash": 25.0,
+"per_counter": 18.0,
+"decay_delay": 6.0,
+"decay_per_sec": 4.0,
+"special_mul": 2.2
+}
+weapons = {
+"fangs": {
+"name": "Kestrel Fangs",
+"desc": "Twin blades. Fast 4-hit combo with a spin finisher, backstab crits, thrown knives.",
+"combo": [
+{"windup": 0.03, "active": 0.07, "recovery": 0.12, "dmg": 11, "shape": "arc", "range": 80, "arc": 150, "power": 0.32, "knock": 0.7, "lunge": 240},
+{"windup": 0.03, "active": 0.07, "recovery": 0.12, "dmg": 11, "shape": "arc", "range": 80, "arc": 150, "power": 0.34, "knock": 0.7, "lunge": 240},
+{"windup": 0.035, "active": 0.08, "recovery": 0.14, "dmg": 14, "shape": "arc", "range": 86, "arc": 170, "power": 0.45, "knock": 0.9, "lunge": 280},
+{"windup": 0.07, "active": 0.14, "recovery": 0.22, "dmg": 28, "shape": "arc", "range": 100, "arc": 360, "power": 0.95, "knock": 2.4, "lunge": 120}
+],
+"combo_reset": 0.32,
+"chain_at": 0.35,
+"backstab_crit": 0.5,
+"special": {"cooldown": 0.5, "knives": 3, "spread_deg": 13.0, "dmg": 9, "speed": 980.0, "pierce": 2, "power": 0.25, "range": 520.0},
+"dash_attack": {"windup": 0.02, "active": 0.1, "recovery": 0.16, "dmg": 20, "shape": "line", "len": 110, "width": 46, "power": 0.65, "knock": 1.2, "lunge": 620},
+"overdrive": {"knives": 12, "dmg_mul": 1.6},
+"forges": ["fangsKnives", "fangsFinisherKnives", "fangsDashCrit"]
+},
+"pike": {
+"name": "Moonreach",
+"desc": "A crescent pike. Long thrusts with tip crits, and a whirl special.",
+"combo": [
+{"windup": 0.06, "active": 0.08, "recovery": 0.15, "dmg": 15, "shape": "line", "len": 158, "width": 30, "power": 0.42, "knock": 0.9, "lunge": 180},
+{"windup": 0.05, "active": 0.08, "recovery": 0.15, "dmg": 15, "shape": "line", "len": 158, "width": 30, "power": 0.44, "knock": 0.9, "lunge": 180},
+{"windup": 0.1, "active": 0.12, "recovery": 0.26, "dmg": 34, "shape": "line", "len": 190, "width": 38, "power": 0.9, "knock": 3.0, "lunge": 380}
+],
+"combo_reset": 0.34,
+"chain_at": 0.35,
+"tip_fraction": 0.3,
+"tip_crit": 0.6,
+"special": {"tick_every": 0.11, "dmg": 7, "radius": 120.0, "move_mul": 0.55, "max_time": 2.2, "power": 0.22, "cooldown": 0.2},
+"dash_attack": {"windup": 0.02, "active": 0.12, "recovery": 0.16, "dmg": 24, "shape": "line", "len": 210, "width": 34, "power": 0.7, "knock": 1.5, "lunge": 700},
+"overdrive": {"radius_mul": 1.6, "pull": 900.0, "dmg_mul": 1.8},
+"forges": ["pikeTip", "pikeSpinPull", "pikeWave"]
+},
+"anvil": {
+"name": "Anvilheart",
+"desc": "A molten maul. Slow armor-breaking swings and a charged fissure.",
+"combo": [
+{"windup": 0.16, "active": 0.1, "recovery": 0.2, "dmg": 30, "shape": "arc", "range": 104, "arc": 130, "power": 0.75, "knock": 1.6, "lunge": 200},
+{"windup": 0.14, "active": 0.11, "recovery": 0.22, "dmg": 30, "shape": "arc", "range": 108, "arc": 210, "power": 0.8, "knock": 1.7, "lunge": 180},
+{"windup": 0.24, "active": 0.12, "recovery": 0.32, "dmg": 64, "shape": "arc", "range": 130, "arc": 360, "power": 1.0, "knock": 3.2, "lunge": 0}
+],
+"combo_reset": 0.38,
+"chain_at": 0.4,
+"armor_break_mul": 2.5,
+"special": {"cooldown": 0.25, "charge_max": 0.75, "dmg_min": 24, "dmg_max": 70, "range_min": 150.0, "range_max": 320.0, "width": 70.0, "power": 1.0, "move_mul": 0.4},
+"dash_attack": {"windup": 0.04, "active": 0.14, "recovery": 0.2, "dmg": 34, "shape": "line", "len": 120, "width": 70, "power": 0.85, "knock": 2.6, "lunge": 560},
+"overdrive": {"fissures": 3, "dmg_mul": 1.5},
+"forges": ["anvilCharge", "anvilAftershock", "anvilEarthsplit"]
+},
+"bow": {
+"name": "Vesper Bow",
+"desc": "Quick shots, a perfect-release power shot, and starfall.",
+"shot": {"cooldown": 0.17, "dmg": 9, "speed": 1250.0, "power": 0.22, "range": 760.0},
+"volley_every": 4,
+"volley": {"arrows": 3, "spread_deg": 10.0},
+"charge": {"time": 0.42, "perfect_window": 0.12, "dmg": 34, "perfect_dmg": 48, "speed": 1650.0, "pierce": 99, "power": 0.75, "move_mul": 0.55, "hold_threshold": 0.16},
+"special": {"cooldown": 0.9, "delay": 0.3, "radius": 95.0, "hits": 6, "dmg": 7, "interval": 0.07, "power": 0.3},
+"dash_attack": {"arrows": 5, "spread_deg": 36.0, "dmg": 10, "speed": 1150.0, "power": 0.3},
+"overdrive": {"rains": 3, "dmg_mul": 1.4},
+"forges": ["bowVolley", "bowRain", "bowSplit"]
+},
+"halo": {
+"name": "Sunwheel Halo",
+"desc": "A returning chakram that cuts on the way out and on the way back.",
+"throw": {"range": 330.0, "out_time": 0.26, "dmg": 13, "return_speed": 1300.0, "power": 0.42, "radius": 26.0, "knock": 0.9, "cooldown": 0.12},
+"finisher_every": 3,
+"finisher": {"grind_time": 0.7, "grind_tick": 0.08, "grind_dmg": 6, "dmg_mul": 1.6, "radius": 38.0},
+"special": {"duration": 2.4, "orbit_radius": 88.0, "angular_speed": 11.0, "tick_dmg": 8, "power": 0.3, "cooldown": 0.4, "tick_every": 0.12},
+"dash_attack": {"dmg": 18, "range": 240.0, "power": 0.5},
+"overdrive": {"halos": 3, "dmg_mul": 1.5},
+"forges": ["haloTwin", "haloBlast", "haloOrbit"]
+}
+}
+forges = {
+"fangsKnives": {"weapon": "fangs", "name": "Fan of Fangs", "desc": "Special throws +2 knives.", "max": 2},
+"fangsFinisherKnives": {"weapon": "fangs", "name": "Whirling Steel", "desc": "Your spin finisher also throws a ring of 6 knives.", "max": 1},
+"fangsDashCrit": {"weapon": "fangs", "name": "Ambush", "desc": "Dash-strike has +35% crit chance.", "max": 2},
+"pikeTip": {"weapon": "pike", "name": "Honed Tip", "desc": "The critical tip zone is 50% larger.", "max": 2},
+"pikeSpinPull": {"weapon": "pike", "name": "Tidal Whirl", "desc": "Your whirl drags enemies in.", "max": 1},
+"pikeWave": {"weapon": "pike", "name": "Moonwave", "desc": "Your finisher launches a piercing crescent wave.", "max": 1},
+"anvilCharge": {"weapon": "anvil", "name": "Bellows", "desc": "Fissure charges 30% faster.", "max": 2},
+"anvilAftershock": {"weapon": "anvil", "name": "Aftershock", "desc": "Fissures strike a second time.", "max": 1},
+"anvilEarthsplit": {"weapon": "anvil", "name": "Earthsplitter", "desc": "Your finisher sends out a damaging shockwave.", "max": 1},
+"bowVolley": {"weapon": "bow", "name": "Wider Volley", "desc": "Volleys fire 2 more arrows.", "max": 2},
+"bowRain": {"weapon": "bow", "name": "Meteor Shower", "desc": "Starfall strikes 3 more times over a wider area.", "max": 2},
+"bowSplit": {"weapon": "bow", "name": "Splitting Star", "desc": "Full power shots split into 3 arrows on impact.", "max": 1},
+"haloTwin": {"weapon": "halo", "name": "Twin Halos", "desc": "Throw two halos in a V.", "max": 1},
+"haloBlast": {"weapon": "halo", "name": "Solar Apex", "desc": "Halos explode at the end of their throw.", "max": 1},
+"haloOrbit": {"weapon": "halo", "name": "Long Orbit", "desc": "Orbit lasts 1.2s longer.", "max": 2},
+"gHoned": {"weapon": "", "name": "Honed Edge", "desc": "Attacks deal +15% damage.", "max": 3, "stat": "attack_dmg", "per": 0.15},
+"gTempered": {"weapon": "", "name": "Tempered Core", "desc": "Specials deal +20% damage.", "max": 3, "stat": "special_dmg", "per": 0.2},
+"gQuick": {"weapon": "", "name": "Quickened Grip", "desc": "Attack 10% faster.", "max": 2, "stat": "attack_speed", "per": 0.1},
+"gKeen": {"weapon": "", "name": "Keen Eye", "desc": "+6% critical chance.", "max": 3, "stat": "crit_chance", "per": 0.06},
+"gSigil": {"weapon": "", "name": "Deep Sigil", "desc": "Sigil +1 charge and +15% radius.", "max": 1, "stat": "cast_charges", "per": 1.0}
+}

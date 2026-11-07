@@ -259,3 +259,24 @@ func test_two_depths_play_through() -> void:
 		advance(s, 60 * 120)
 	check(s.run.depth == 3, "the flow carries a run through depths 1 and 2 (reached depth %d, room %d)" % [s.run.depth, s.run.room_index])
 	check(s.run.bosses_killed.has("boss_stag") and s.run.bosses_killed.has("boss_archivist"), "both bosses were defeated on the way")
+
+func test_full_run_to_victory() -> void:
+	var s := make_run(56)
+	s.god_mode = true
+	var spy := _EndSpy.new()
+	s.bus = spy
+	var guard := 0
+	while not s.run.won and guard < 40:
+		guard += 1
+		advance(s, 60 * 150)
+	check(s.run.won, "a full run can be won (reached depth %d step %d)" % [s.run.depth, s.run.step])
+	for b in ["boss_stag", "boss_archivist", "boss_engine", "boss_regent"]:
+		check(s.run.bosses_killed.has(b), "%s defeated" % b)
+	check(s.run.room_index >= 23, "24 rooms in a full run (entered %d)" % (s.run.room_index + 1))
+	check(spy.won, "run_ended fires with won = true")
+
+class _EndSpy extends RefCounted:
+	var won := false
+	func fire(n: StringName, d: Dictionary) -> void:
+		if n == &"run_ended" and d.get("won", false):
+			won = true

@@ -46,7 +46,15 @@ static func update_all(sim, dt: float) -> void:
 		if pr.life <= 0.0:
 			_expire(sim, pr)
 			continue
-		if pr.hit_walls and pr.kind != SimProj.Kind.HALO and pr.kind != SimProj.Kind.ORBIT and sim.point_blocked(pr.pos, 2.0):
+		if pr.data.get("bounce", false):
+			var r: Rect2 = sim.arena.rect
+			if pr.pos.x < r.position.x + pr.radius or pr.pos.x > r.end.x - pr.radius:
+				pr.vel.x = -pr.vel.x
+				pr.pos.x = clampf(pr.pos.x, r.position.x + pr.radius, r.end.x - pr.radius)
+			if pr.pos.y < r.position.y + pr.radius or pr.pos.y > r.end.y - pr.radius:
+				pr.vel.y = -pr.vel.y
+				pr.pos.y = clampf(pr.pos.y, r.position.y + pr.radius, r.end.y - pr.radius)
+		elif pr.hit_walls and pr.kind != SimProj.Kind.HALO and pr.kind != SimProj.Kind.ORBIT and sim.point_blocked(pr.pos, 2.0):
 			sim.fire(&"projectile_wall", {"pos": pr.pos, "team": pr.team})
 			_expire(sim, pr)
 			continue

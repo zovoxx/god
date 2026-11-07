@@ -78,3 +78,12 @@ Each entry: what was decided and why.
 - Inputs pressed during hit-stop are written into the input buffer (they used to be lost — found by the Overdrive test).
 - Labels only wrap when given a width (`UI.para`); full-rect overlays use `set_anchors_and_offsets_preset` (a bare anchor preset left them at zero size under a CanvasLayer).
 - Godot's generated `*.uid` files are committed, as Godot recommends.
+
+## Depths 3–4 (phase 7)
+- The spec's depth 3 list names nine creatures; the Pylon is the Coil Sentry's summon, so each depth still has 8 encounter enemies (plus summons: Grub, Slurrylet, Pylon, Void Portal, Void Imp).
+- Gyrosaw: its first heading is telegraphed by a line; while spinning it is invulnerable, has a red spinning-danger ring and deals contact damage, then stops and glows (vulnerable) for 1.6 s.
+- Sparkmites latch only if their telegraphed latch line hits; each clinging mite slows Wren by 12 % and stings every 1.2 s; any dash (or invulnerability) throws them all off.
+- Mirror Knight / Eclipsed Knight guards are telegraphed by a pulsing white ring; hitting them during it is reflected as 60 % of their damage ("REFLECTED").
+- The Pale Regent is pale by design; she still reads as a boss through the purple crown/aura, purple HP bar and red eyes.
+- The Engine Tyrant's phase-2 change is OVERHEAT: four lasers instead of two, more mortars/vents/saws and a new Meltdown ring attack.
+- The Riveters guardian always spawns as a linked pair; the room clears when both are dead.

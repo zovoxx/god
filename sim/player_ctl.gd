@@ -18,6 +18,7 @@ static func update(sim, p: SimPlayer, inp: InputFrame, dt: float) -> void:
 	p.invuln_t = maxf(0.0, p.invuln_t - dt)
 	p.hurt_lock = maxf(0.0, p.hurt_lock - dt)
 	p.special_cd = maxf(0.0, p.special_cd - dt)
+	p.slow_t = maxf(0.0, p.slow_t - dt)
 	p.squash = move_toward(p.squash, 0.0, dt * 3.0)
 	if p.dash_charges < p.dash_max:
 		p.dash_cd -= dt

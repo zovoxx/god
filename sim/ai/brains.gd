@@ -14,7 +14,7 @@ static func all() -> Dictionary:
 	return d
 
 static func _modules() -> Array:
-	return [AITraining, AIDepth1, AIDepth2, AIBosses12]
+	return [AITraining, AIDepth1, AIDepth2, AIBosses12, AIDepth3, AIDepth4, AIBosses34]
 
 class DummyBrain extends Brain:
 	func update(sim, e: SimEnemy, dt: float) -> void:

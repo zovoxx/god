@@ -115,7 +115,12 @@ func _begin_content() -> void:
 			_start_waves(String(plan.type))
 		"guardian":
 			var g: String = plan.get("kind", Cfg.T.rooms.guardians[str(run.depth)][0])
-			boss_ref = Enemies.spawn(sim, g, Vector2(0, sim.arena.rect.position.y + 220.0), run.depth)
+			if bool(Enemies.def_for(sim, g).get("pair", false)):
+				var twin := Enemies.spawn(sim, g, Vector2(-220, sim.arena.rect.position.y + 220.0), run.depth)
+				boss_ref = Enemies.spawn(sim, g, Vector2(220, sim.arena.rect.position.y + 220.0), run.depth)
+				twin.brain.init(sim, twin)
+			else:
+				boss_ref = Enemies.spawn(sim, g, Vector2(0, sim.arena.rect.position.y + 220.0), run.depth)
 			sim.fire(&"banner", {"text": boss_ref.name.to_upper(), "sub": "Guardian of " + Rooms.depth_name(run.depth), "col": Cfg.col("boss"), "life": 2.0, "big": true})
 			waves.start([], run.depth, 0.0)
 			state = S.COMBAT

@@ -246,29 +246,78 @@ func _draw_room_props(ci: CanvasItem) -> void:
 			ci.draw_string_outline(font, pos + Vector2(-90, 50), info.sub, HORIZONTAL_ALIGNMENT_CENTER, 180, 15, 5, Color(0, 0, 0, a))
 			ci.draw_string(font, pos + Vector2(-90, 50), info.sub, HORIZONTAL_ALIGNMENT_CENTER, 180, 15, Color(1, 1, 1, 0.8 * a))
 
-## tether beams (Twinned Scribes), heal beams (Tideclerics)
+func _beam(ci: CanvasItem, a: Vector2, b: Vector2, state: String) -> void:
+	var danger := Cfg.col("danger")
+	match state:
+		"warn":
+			ci.draw_line(a, b, Color(Cfg.col("danger_outline"), 0.6), 6.0)
+			ci.draw_line(a, b, Color(danger, 0.35 + 0.35 * sin(time * 30.0)), 3.0)
+		"on":
+			ci.draw_line(a, b, Color(Cfg.col("danger_outline"), 0.9), 18.0)
+			ci.draw_line(a, b, Color(danger, 0.95), 12.0)
+			ci.draw_line(a, b, Cfg.col("danger_core"), 4.0)
+		_:
+			ci.draw_line(a, b, Color(danger, 0.12), 2.0)
+
+func _well(ci: CanvasItem, c: Vector2, r: float) -> void:
+	var danger := Cfg.col("danger")
+	for i in 4:
+		var a := -time * 4.0 + TAU * i / 4.0
+		ci.draw_arc(c, r * (0.35 + 0.15 * i), a, a + 1.6, 12, Color(danger, 0.55), 3.0)
+	ci.draw_circle(c, 42.0, Color(Cfg.col("danger_outline"), 0.8))
+	ci.draw_circle(c, 36.0, Color(danger, 0.85))
+	ci.draw_circle(c, 16.0, Cfg.col("danger_core"))
+
+## tether beams (Twinned Scribes), heal beams (Tideclerics), fences, lasers, wells, auras
 func _draw_beams(ci: CanvasItem) -> void:
 	var danger := Cfg.col("danger")
 	for e in sim.enemies:
 		if not e.alive:
 			continue
+		if e.kind == "coilsentry":
+			var ps: Array = sim.enemies.filter(func(o): return o.alive and o.kind == "pylon" and o.data.get("owner") == e and o.spawn_t <= 0.0)
+			for i in ps.size():
+				for j in range(i + 1, ps.size()):
+					if ps[i].pos.distance_to(ps[j].pos) < 360.0:
+						_beam(ci, ipos(ps[i]), ipos(ps[j]), String(e.data.get("fence", "off")))
+		if e.kind == "mini_riveter" and e.data.get("leader", false):
+			var tw = e.data.get("twin")
+			if tw != null and tw.alive:
+				_beam(ci, ipos(e), ipos(tw), String(e.data.get("fence", "off")))
+		if e.data.has("lasers"):
+			for ang in e.data.lasers:
+				var end: Vector2 = ipos(e) + Geom.dir(ang) * 900.0
+				ci.draw_line(ipos(e), end, Color(Cfg.col("danger_outline"), 0.9), 30.0)
+				ci.draw_line(ipos(e), end, danger, 22.0)
+				ci.draw_line(ipos(e), end, Cfg.col("danger_core"), 7.0)
+		if e.data.has("beam_a"):
+			var end2: Vector2 = ipos(e) + Geom.dir(float(e.data.beam_a)) * 520.0
+			ci.draw_line(ipos(e), end2, Color(Cfg.col("danger_outline"), 0.9), 22.0)
+			ci.draw_line(ipos(e), end2, danger, 14.0)
+			ci.draw_line(ipos(e), end2, Cfg.col("danger_core"), 4.0)
+		if e.data.has("well"):
+			_well(ci, e.data.well, 260.0)
+		for w in e.data.get("wells", []):
+			_well(ci, w.pos, 240.0)
+		if e.data.has("grav_t"):
+			_well(ci, e.data.grav_c, 360.0)
+		if e.kind == "bellwether":
+			ci.draw_arc(ipos(e), 210.0, 0, TAU, 48, Color("#5ee8c8", 0.35), 3.0, true)
+			ci.draw_circle(ipos(e), 210.0, Color(0.37, 0.91, 0.78, 0.05))
+		if e.shield > 0.0 and e.data.get("bubble", false):
+			ci.draw_arc(ipos(e), e.radius + 10.0, 0, TAU, 28, Color("#7fe3ff", 0.8), 3.0, true)
+			ci.draw_circle(ipos(e), e.radius + 10.0, Color(0.5, 0.9, 1.0, 0.1))
+		if e.data.get("spin", false):
+			ci.draw_arc(ipos(e), e.radius + 6.0, time * 20.0, time * 20.0 + 4.5, 20, danger, 4.0, true)
+		if e.data.get("guard", false):
+			ci.draw_arc(ipos(e), e.radius + 12.0, 0, TAU, 28, Color(1, 1, 1, 0.5 + 0.4 * sin(time * 16.0)), 4.0, true)
 		if e.kind == "scribe" and e.data.get("leader", false):
 			var pt = e.data.get("partner")
 			if pt == null or not pt.alive:
 				continue
 			var a := ipos(e)
 			var b := ipos(pt)
-			match String(e.data.get("beam", "off")):
-				"warn":
-					var fl := 0.35 + 0.35 * sin(time * 30.0)
-					ci.draw_line(a, b, Color(Cfg.col("danger_outline"), 0.6), 6.0)
-					ci.draw_line(a, b, Color(danger, fl), 3.0)
-				"on":
-					ci.draw_line(a, b, Color(Cfg.col("danger_outline"), 0.9), 18.0)
-					ci.draw_line(a, b, Color(danger, 0.95), 12.0)
-					ci.draw_line(a, b, Cfg.col("danger_core"), 4.0)
-				_:
-					ci.draw_line(a, b, Color(danger, 0.12), 2.0)
+			_beam(ci, a, b, String(e.data.get("beam", "off")))
 		elif e.kind == "tidecleric" and e.data.get("heal") != null:
 			var tg = e.data.heal
 			if tg.alive:

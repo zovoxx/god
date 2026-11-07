@@ -27,6 +27,8 @@ func scenarios() -> Array:
 		{"name": "death_recap", "setup": _death, "wait": 160},
 		{"name": "boon_choice", "setup": _boon, "wait": 0, "until": _boon_ready},
 		{"name": "wick", "setup": _wick, "wait": 60},
+		{"name": "depth3", "setup": _depth3, "wait": 200},
+		{"name": "depth4", "setup": _depth4, "wait": 200},
 	]
 
 func tick(_d: float) -> bool:
@@ -143,3 +145,19 @@ func _boon_ready() -> bool:
 
 func _wick() -> void:
 	main.show_title()
+
+func _depth3() -> void:
+	main.start_run({"weapon": "anvil"})
+	var s := _game()
+	s.god_mode = true
+	s.flow.enter({"type": "boss", "kind": "boss_engine", "depth": 3, "step": 5, "reward": "none", "seed": 21})
+	for k in ["coilsentry", "ironclad", "gyrosaw", "bellwether"]:
+		Enemies.spawn(s, k, Enemies.spawn_point(s, 20.0), 3)
+
+func _depth4() -> void:
+	main.start_run({"weapon": "bow"})
+	var s := _game()
+	s.god_mode = true
+	s.flow.enter({"type": "boss", "kind": "boss_regent", "depth": 4, "step": 5, "reward": "none", "seed": 22})
+	for k in ["mirrorknight", "prism", "nullshard", "aegisherald", "hexer"]:
+		Enemies.spawn(s, k, Enemies.spawn_point(s, 20.0), 4)

@@ -101,6 +101,8 @@ func move_speed() -> float:
 		s *= 1.0 - Status.dread
 	if slow_t > 0.0:
 		s *= 0.6
+	if float(data.get("bell_t", 0.0)) > 0.0:
+		s *= 1.3
 	if root_t > 0.0:
 		s = 0.0
 	return s

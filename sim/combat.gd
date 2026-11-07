@@ -57,6 +57,8 @@ static func deal(sim, e: SimEnemy, h: HitInfo) -> float:
 	if countered:
 		mul += float(F.counter.bonus_dmg)
 	dmg *= mul * Status.vuln(sim, e)
+	if float(e.data.get("bell_t", 0.0)) > 0.0:
+		dmg *= 0.7
 	if sim.run != null and h.slot != "status":
 		dmg *= sim.run.player_dmg_mul()
 	# ── crit ──

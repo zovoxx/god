@@ -251,7 +251,11 @@ func equip_weapon(id: String, forges: Dictionary = {}) -> void:
 # ───────────────────────── derived player numbers ─────────────────────────
 
 func move_speed() -> float:
-	return float(T.player.max_speed) * (1.0 + stats.move_speed + stats.val("updraft_active"))
+	var m := 1.0 + stats.move_speed + stats.val("updraft_active")
+	if player.slow_t > 0.0:
+		m *= player.slow_mul
+	m *= maxf(0.4, 1.0 - 0.12 * player.latched)
+	return float(T.player.max_speed) * m
 
 func dash_cooldown() -> float:
 	return float(T.dash.cooldown) * maxf(0.3, 1.0 - stats.dash_cooldown)

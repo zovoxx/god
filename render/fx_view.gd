@@ -203,6 +203,15 @@ func _on_event(name: StringName, d: Dictionary) -> void:
 			rings.append({"pos": d.pos, "r0": 10.0, "r1": 90.0, "t": 0.0, "life": 0.3, "col": _patron_col("umbra"), "w": 5.0})
 			for to in d.to:
 				bolts.append({"pts": [d.pos, to], "t": 0.0, "life": 0.25, "col": _patron_col("umbra"), "straight": true, "w": 3.0})
+		&"reflected":
+			_callout(d.pos + Vector2(0, -44), "REFLECTED", Color.WHITE, 26)
+			Audio.play("clang", 1.3)
+		&"time_slow":
+			_callout(d.pos + Vector2(0, -50), "SLOWED", Color("#d8c8ff"), 28)
+		&"shake_off":
+			burst(P.SPARK, d.pos, 6, Vector2.ZERO, PI, 100, 260, 0.2, 2.0, Color("#ffe24a"))
+		&"bubble":
+			bolts.append({"pts": [d.from, d.to], "t": 0.0, "life": 0.3, "col": Color("#7fe3ff"), "straight": true, "w": 3.0})
 		&"boon_gained":
 			Audio.play("boon_gain")
 		&"explosion":

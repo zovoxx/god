@@ -113,6 +113,8 @@ func _draw_screen_fx(vs: Vector2) -> void:
 		_edge(vs, Color(danger, float(Cfg.F.low_hp.vignette_alpha) * low_hp_k * (0.55 + 0.45 * beat)), 140.0)
 	if hurt_flash > 0.0:
 		_edge(vs, Color(danger, 0.55 * hurt_flash * Cfg.flash_mul), 90.0)
+	if sim.player.slow_t > 0.0:
+		_edge(vs, Color(0.7, 0.6, 1.0, 0.3), 120.0)
 	if heal_glow > 0.0:
 		_edge(vs, Color(Cfg.col("heal"), 0.25 * heal_glow), 60.0)
 	# directional damage arcs around Wren, pointing at the source

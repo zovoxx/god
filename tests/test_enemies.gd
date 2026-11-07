@@ -15,7 +15,7 @@ func _bosses(depth: int) -> Array:
 	return out
 
 func test_roster_sizes() -> void:
-	for d in [1, 2]:
+	for d in [1, 2, 3, 4]:
 		var main := _kinds(d).filter(func(k): return not T.enemies[k].get("summon", false))
 		check(main.size() == 8, "depth %d has 8 enemies (has %d: %s)" % [d, main.size(), main])
 		var bs := _bosses(d)
@@ -23,7 +23,7 @@ func test_roster_sizes() -> void:
 		check(bs.filter(func(k): return T.bosses[k].get("boss", false)).size() == 1, "depth %d has a boss" % d)
 
 func test_every_enemy_has_brain_art_and_tip() -> void:
-	for d in [1, 2]:
+	for d in [1, 2, 3, 4]:
 		for k in _kinds(d) + _bosses(d):
 			var def: Dictionary = T.enemies.get(k, T.bosses.get(k, {}))
 			check(Enemies.brain_for(k) != Enemies.brain_for("_default") or k == "_default", "%s has a brain" % k)
@@ -49,17 +49,17 @@ func _soak(kind: String, seconds: float, depth: int) -> Dictionary:
 	return {"sim": s, "spy": spy, "e": e}
 
 func test_enemies_attack_with_telegraphs() -> void:
-	for d in [1, 2]:
+	for d in [1, 2, 3, 4]:
 		for k in _kinds(d):
-			if k in ["tidecleric"]:
-				continue  # support: heals allies, attacks only when nobody needs mending (covered below)
+			if k in ["tidecleric", "bellwether", "aegisherald", "pylon", "voidportal"]:
+				continue  # support/summons: they buff, heal or spawn instead of attacking  # support: heals allies, attacks only when nobody needs mending (covered below)
 			var r := _soak(k, 9.0, d)
 			var spy: _Spy = r.spy
 			check(spy.count(&"telegraph_started") + spy.count(&"hazard_warn") > 0, "%s telegraphs its attacks" % k)
 			check(spy.count(&"player_hurt") > 0 or spy.count(&"telegraph_impact") > 0 or spy.count(&"hazard_warn") > 0, "%s attacks resolve" % k)
 
 func test_bosses_cycle_named_attacks_and_phase() -> void:
-	for d in [1, 2]:
+	for d in [1, 2, 3, 4]:
 		for k in _bosses(d):
 			var s := make_sim("fangs", 11)
 			s.god_mode = true
@@ -84,7 +84,7 @@ func test_bosses_cycle_named_attacks_and_phase() -> void:
 			check(not e.invuln, "%s becomes vulnerable again" % k)
 
 func test_boss_attack_lists_have_six() -> void:
-	for k in ["boss_stag", "boss_archivist"]:
+	for k in ["boss_stag", "boss_archivist", "boss_engine", "boss_regent"]:
 		var b = Enemies.brain_for(k)
 		check(b.attacks.size() >= 6, "%s has 6+ named attacks" % k)
 		check(b.attacks.any(func(a): return int(a.get("min_phase", 0)) >= 1), "%s unlocks something in phase 2" % k)
@@ -191,3 +191,44 @@ class _Spy extends RefCounted:
 		return names.count(n)
 	func data_of(n: StringName) -> Array:
 		return datas.filter(func(x): return x[0] == n).map(func(x): return x[1])
+
+func test_depth34_specials() -> void:
+	var s := make_sim()
+	s.god_mode = true
+	# Gyrosaw is invulnerable while spinning
+	var g := Enemies.spawn(s, "gyrosaw", Vector2(300, 0), 3, {"portal": false})
+	for i in 180:
+		s.step(InputFrame.new(), 1.0 / 60.0)
+		if g.data.get("spin", false):
+			break
+	check(g.data.get("spin", false) and g.invuln, "Gyrosaw spins invulnerably")
+	# Mirror Knight reflects hits while guarding
+	var m := Enemies.spawn(s, "mirrorknight", Vector2(100, 0), 4, {"portal": false})
+	m.data["guard"] = true
+	check(Combat.deal(s, m, HitInfo.make(10.0, "attack", 0.3, Vector2.RIGHT, Vector2.ZERO)) == 0.0, "Mirror Knight's guard reflects the hit")
+	# Ironclad armor breaks into a stun
+	var ic := Enemies.spawn(s, "ironclad", Vector2(-200, 0), 3, {"portal": false})
+	var h := HitInfo.make(ic.armor + 5.0, "attack", 0.8, Vector2.RIGHT, Vector2.ZERO)
+	Combat.deal(s, ic, h)
+	check(ic.armor == 0.0 and ic.stagger_t > 1.0, "breaking Ironclad armor stuns it")
+	# Bellwether buff reduces damage
+	var b := Enemies.spawn(s, "bellwether", Vector2(0, -200), 3, {"portal": false})
+	var ally := Enemies.spawn(s, "rivethound", Vector2(30, -200), 3, {"portal": false})
+	s.no_ai = false
+	steps(s, 20)
+	ally.pos = b.pos + Vector2(30, 0)
+	steps(s, 2)
+	var hh := HitInfo.make(10.0, "attack", 0.0, Vector2.RIGHT, Vector2.ZERO)
+	hh.can_crit = false
+	near(Combat.deal(s, ally, hh), 7.0, 0.01, "allies in the Bellwether's ring take 30% less")
+
+func test_sparkmites_shake_off() -> void:
+	var s := make_sim()
+	var m := Enemies.spawn(s, "sparkmite", Vector2(60, 0), 3, {"portal": false})
+	m.data["latched"] = true
+	m.data["off"] = Vector2(10, 0)
+	s.step(InputFrame.new(), 1.0 / 60.0)
+	check(s.player.latched == 1 and s.move_speed() < float(T.player.max_speed), "a clinging mite slows you")
+	s.step(press("dash"), 1.0 / 60.0)
+	s.step(InputFrame.new(), 1.0 / 60.0)
+	check(not m.data.get("latched", false), "dashing shakes it off")

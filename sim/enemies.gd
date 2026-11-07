@@ -112,12 +112,19 @@ static func spawn_point(sim, r: float, near: bool = false) -> Vector2:
 
 static func update_all(sim, dt: float) -> void:
 	var F: GameFeel = sim.F
+	var latched := 0
+	for e in sim.enemies:
+		if e.alive and e.data.get("latched", false):
+			latched += 1
+	sim.player.latched = latched
 	for e in sim.enemies:
 		if not e.alive:
 			continue
 		e.flash_t = maxf(0.0, e.flash_t - dt)
 		e.countered_t = maxf(0.0, e.countered_t - dt)
 		e.glow = maxf(0.0, e.glow - dt * 3.0)
+		if e.data.has("bell_t"):
+			e.data.bell_t = float(e.data.bell_t) - dt
 		_squash_spring(e, dt, F)
 		if e.spawn_t > 0.0:
 			e.spawn_t -= dt

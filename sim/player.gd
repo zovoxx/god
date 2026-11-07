@@ -54,6 +54,11 @@ var cast_max := 2
 var cast_recharge := 0.0
 var cast_t := 0.0
 
+# slows applied by enemies (Sparkmites, Time Sigil)
+var slow_t := 0.0
+var slow_mul := 1.0
+var latched := 0
+
 # feel / meta
 var overdrive := 0.0
 var overdrive_ready := false

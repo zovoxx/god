@@ -65,6 +65,7 @@ func _on_bus(name: StringName, d: Dictionary) -> void:
 		return
 	match name:
 		&"room_entered":
+			Audio.set_depth(int(d.depth) - 1)
 			world.rebuild_room(int(d.seed))
 			cam.snap_to(sim.player.pos)
 			fade.color.a = 1.0
@@ -84,6 +85,7 @@ func _on_bus(name: StringName, d: Dictionary) -> void:
 		&"room_cleared":
 			cam.zoom_punch(float(Cfg.F.room_clear.boss_zoom_punch if d.boss else Cfg.F.room_clear.zoom_punch))
 			Audio.play("room_clear")
+			Audio.stinger()
 		&"door_lit":
 			Audio.play("door_lit", 1.0 + int(d.index) * 0.12)
 
@@ -242,6 +244,12 @@ func _process(delta: float) -> void:
 	if p.move_dir != Vector2.ZERO:
 		goal_look = (p.aim_dir * 0.6 + p.move_dir * 0.4) * la
 	cam.look = cam.look.lerp(goal_look, clampf(delta * 4.0, 0.0, 1.0))
+	var boss_alive := false
+	for e in sim.enemies:
+		if e.alive and e.is_boss:
+			boss_alive = true
+	var fighting: bool = sim.flow != null and sim.flow.state == RoomFlow.S.COMBAT and sim.living_enemies() > 0
+	Audio.set_intensity(fighting, sim.streak_tier >= 2, boss_alive)
 	cam.zoom_fit = 0.0
 	if sim.flow != null and sim.flow.state in [RoomFlow.S.DOORS, RoomFlow.S.SPRING, RoomFlow.S.EXIT]:
 		var r: Rect2 = sim.arena.rect

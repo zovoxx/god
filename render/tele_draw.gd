@@ -47,7 +47,7 @@ static func draw_all(ci: CanvasItem, sim: Sim, time: float) -> void:
 ## draws the shape filled from its outer edge inward to fraction k (1 = fully filled)
 static func _shape(ci: CanvasItem, t, k: float, col: Color, filled: bool) -> void:
 	k = clampf(k, 0.0, 1.0)
-	if k <= 0.001:
+	if k <= 0.03:
 		return
 	match t.shape:
 		Tele.Shape.CIRCLE:

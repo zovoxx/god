@@ -27,6 +27,7 @@ func scenarios() -> Array:
 		{"name": "death_recap", "setup": _death, "wait": 200},
 		{"name": "boon_choice", "setup": _boon, "wait": 0, "until": _boon_ready},
 		{"name": "wick", "setup": _wick, "wait": 60},
+		{"name": "settings", "setup": _settings, "wait": 30},
 		{"name": "depth3", "setup": _depth3, "wait": 200},
 		{"name": "depth4", "setup": _depth4, "wait": 200},
 	]
@@ -163,3 +164,7 @@ func _depth4() -> void:
 	s.flow.enter({"type": "boss", "kind": "boss_regent", "depth": 4, "step": 5, "reward": "none", "seed": 22})
 	for k in ["mirrorknight", "prism", "nullshard", "aegisherald", "hexer"]:
 		Enemies.spawn(s, k, Enemies.spawn_point(s, 20.0), 4)
+
+func _settings() -> void:
+	main.show_title()
+	main.open_settings(main.ui_layer)

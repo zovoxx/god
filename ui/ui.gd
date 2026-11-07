@@ -153,6 +153,7 @@ static func scroll(c: Control, min_size: Vector2) -> ScrollContainer:
 	var s := ScrollContainer.new()
 	s.custom_minimum_size = min_size
 	s.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	s.follow_focus = true
 	s.add_child(c)
 	c.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	return s

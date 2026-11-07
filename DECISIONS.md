@@ -98,3 +98,12 @@ Each entry: what was decided and why.
 - Daily Descent seed and weapon are derived from the local date (`YYYY-MM-DD`); the top 10 local scores per day are kept. Score = 100/room + 5/kill + 500/boss + 2000 for a win − 0.1/second.
 - The bestiary records a creature when it first appears, counts kills and deaths to it, and reveals its tip after 3 kills or a death to it.
 - Achievements that can happen mid-run are checked on every room clear and pop as toasts immediately; the rest are checked at the end of the run.
+
+## Audio, settings, saves (phase 9)
+- All sound is synthesised by `audio/synth.gd` (sine/triangle/square/saw/noise voices with envelopes, pitch sweeps and a one-pole low-pass) into 16-bit WAV streams — 67 effects rendered in a WorkerThreadPool task at startup. `res://audio/<id>.ogg` or `.wav` overrides any of them (ids are the keys of `Synth.sfx_recipes()`).
+- Music: per depth (plus a Wick theme) four synchronised 4-bar loops — explore (pad + arpeggio), combat (bass + drums), streak (fast lead), boss (heavy drums + stabs) — rendered on a worker thread the first time a depth is entered, then faded in/out by what is happening (enemies alive, streak tier ≥ BLAZING, boss alive). A stinger plays on every room clear.
+- Low HP enables a low-pass filter on the Music bus and a heartbeat loop; healing out of it plays a warm chime.
+- Voice pool of 28 players with voice stealing, ±8 % random pitch, 28 ms minimum retrigger per sound.
+- Audio is disabled in headless mode and in the bot; every audio call is a safe no-op there.
+- Settings are saved to `user://settings.json` on every change; bindings are saved as serialised events and re-installed at startup. Rebinding replaces the keyboard *or* the gamepad binding of an action, keeping the other.
+- Saves: `user://meta.json` (Wick progress), `user://settings.json`, `user://run.json` (the run in progress: written when entering each room and on quit, deleted when a run ends).

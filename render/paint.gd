@@ -11,6 +11,8 @@ static func poly(ci: CanvasItem, pts: PackedVector2Array, fill: Color, w: float 
 	var loop := pts.duplicate()
 	loop.append(pts[0])
 	ci.draw_polyline(loop, OUT, w * 2.0, true)
+	if Geometry2D.triangulate_polygon(pts).is_empty():
+		return
 	ci.draw_colored_polygon(pts, fill)
 
 static func circ(ci: CanvasItem, c: Vector2, r: float, fill: Color, w: float = 3.0) -> void:

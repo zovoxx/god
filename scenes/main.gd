@@ -64,6 +64,7 @@ func show_title() -> void:
 		menu.append(["continue", "Continue descent"])
 	menu.append(["wick", "Enter the Wick"])
 	menu.append(["training", "Training grounds"])
+	menu.append(["settings", "Settings"])
 	menu.append(["quit", "Quit"])
 	var t := TitleScreen.new()
 	t.setup(menu)
@@ -77,6 +78,7 @@ func _on_title(id: String) -> void:
 		"wick": show_wick()
 		"new": start_run({})
 		"training": start_test_room()
+		"settings": open_settings(ui_layer)
 		"quit": get_tree().quit()
 
 # ───────── runs ─────────
@@ -174,9 +176,8 @@ func show_wick() -> void:
 	_show(w)
 
 func open_settings(parent: Node) -> void:
-	if ClassDB.class_exists("Node") and ResourceLoader.exists("res://ui/settings_screen.gd"):
-		var st = load("res://ui/settings_screen.gd").new()
-		parent.add_child(st)
+	var st = load("res://ui/settings_screen.gd").new()
+	parent.add_child(st)
 
 ## achievements that can be earned mid-run pop as soon as they happen
 func _live_achievements() -> void:

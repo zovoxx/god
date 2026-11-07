@@ -107,7 +107,7 @@ static func _flake(ci: CanvasItem) -> void:
 		ci.draw_line(Geom.dir(a) * 7.0, -Geom.dir(a) * 7.0, Color.WHITE, 2.0)
 
 static func _i_haste(ci: CanvasItem) -> void:
-	ci.draw_colored_polygon(Paint.pts([-4, -6, 2, -1, -1, 0, 4, 6, -2, 1, 1, 0]), Color.BLACK)
+	ci.draw_colored_polygon(Paint.pts([-1, -7, 4, -7, 1, -1, 4, -1, -3, 7, -1, 1, -4, 1]), Color.BLACK)
 static func _i_shield(ci: CanvasItem) -> void:
 	ci.draw_colored_polygon(Paint.pts([0, -6, 5, -3, 4, 3, 0, 6, -4, 3, -5, -3]), Color.BLACK)
 static func _i_bomb(ci: CanvasItem) -> void:

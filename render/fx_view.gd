@@ -465,7 +465,7 @@ func draw_over(ci: CanvasItem, wv) -> void:
 			P.SHARD:
 				var rot := p_rot[i]
 				var pts2 := PackedVector2Array([p_pos[i] + Geom.dir(rot) * s, p_pos[i] + Geom.dir(rot + 2.3) * s * 0.7, p_pos[i] + Geom.dir(rot + 4.0) * s * 0.8])
-				ci.draw_colored_polygon(pts2, c)
+				ci.draw_primitive(pts2, PackedColorArray([c, c, c]), PackedVector2Array())
 			P.EMBER:
 				ci.draw_circle(p_pos[i], s * 1.8 * k2, Color(c, c.a * 0.25))
 				ci.draw_circle(p_pos[i], s * 0.7 * k2, c)
@@ -499,18 +499,18 @@ func _draw_slashes(ci: CanvasItem) -> void:
 			for i in n + 1:
 				var f := float(i) / n * sweep
 				var ang: float = s.ang + (-arc * 0.5 + arc * f) * side
-				var thick := sin(f / maxf(0.01, sweep) * PI) * (16.0 if not s.fin else 26.0)
+				var thick := maxf(2.0, sin(f / maxf(0.01, sweep) * PI) * (16.0 if not s.fin else 26.0))
 				outer.append(pos + Geom.dir(ang) * r)
 				inner.append(pos + Geom.dir(ang) * (r - thick - 2.0))
 			inner.reverse()
 			var poly := outer + inner
-			if poly.size() >= 3:
+			if poly.size() >= 3 and sweep > 0.05:
 				ci.draw_colored_polygon(poly, Color(col, 0.85 * a))
 				ci.draw_polyline(outer, Color(1, 1, 1, a), 2.0)
 		else:
 			var dirv := Geom.dir(s.ang)
 			var length: float = s.len
-			var w: float = s.width * 0.5 * (1.0 - k * 0.5)
+			var w: float = maxf(2.0, s.width * 0.5 * (1.0 - k * 0.5))
 			var base: Vector2 = pos + dirv * 10.0
 			var tip: Vector2 = pos + dirv * length
 			var poly2 := PackedVector2Array([base + dirv.orthogonal() * w, tip, base - dirv.orthogonal() * w])

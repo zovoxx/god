@@ -65,3 +65,10 @@
 - `ui/run_summary.gd`: time, depth, rooms, kills, damage dealt, damage taken per source (bars), best hit, highest streak, perfect dashes/counters/finishers, Embers, Vows kept, mastery gain, boons, achievements, personal-best comparisons.
 - Death recap now carries the next-unlock progress bar and the new story line.
 - Tests: purchases + requirements, unlocks shaping run options, keepsakes, mastery → forges, Ember maths, Vows, Heat, story, achievements, Daily seed/weapon/score, bestiary, personal bests, meta JSON round trip.
+
+## Phase 9 — UI pass, audio, settings, saves
+- `audio/synth.gd` + `audio/audio.gd`: 67 procedural SFX (hits, crits, kills, every weapon, dash, perfect, clang, finisher, freeze/shatter, telegraph rising cues, impacts, explosions, beams, portals, mines, roars, room clear arpeggio, doors, rarity-specific card reveals up to a legendary chorus, Concord, UI sounds, achievement, heartbeat, warm chime, stinger), file overrides, voice pool, layered reactive music per depth, low-HP muffling.
+- `ui/settings_screen.gd`: Master/Music/SFX volumes; screen shake, hit-stop, flash and damage-number sliders; damage numbers on/off; reduce flashing; colour-blind palette; aim mode; graphics preset; fullscreen; full keyboard and gamepad rebinding with reset. Reachable from the title, the Wick and the pause menu.
+- UI pass: one shared theme everywhere, focus-following scroll lists, wrapped paragraphs, fixed overlay sizing, polygon fixes (no more triangulation errors).
+- Saves: meta, settings, and mid-run resume ("Continue descent" / `--continue`).
+- Tests: every SFX renders, music layers loop in sync, audio API is safe headless, rebinding and binding persistence, default controls, settings round trip, colour-blind palette swap, feel sliders, mid-run resume restores room, build, gold and weapon.

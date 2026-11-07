@@ -192,6 +192,35 @@ func _on_event(name: StringName, d: Dictionary) -> void:
 			if d.hit or d.boss:
 				cam.add_trauma(0.2 if not d.boss else 0.35)
 			Audio.play("impact", 1.0, -10.0)
+		&"explosion":
+			burst(P.EMBER, d.pos, 30, Vector2.ZERO, PI, 120, 420, 0.5, 6.0, Color("#ffb04a"), 4.0)
+			burst(P.SMOKE, d.pos, 10, Vector2.ZERO, PI, 40, 140, 0.8, 18.0, Color(0.3, 0.25, 0.22, 0.5), 2.5)
+			rings.append({"pos": d.pos, "r0": 10.0, "r1": d.radius, "t": 0.0, "life": 0.25, "col": Cfg.col("danger_hot"), "w": 8.0})
+			_decal(d.pos, d.radius * 0.6, 1)
+			cam.add_trauma(float(Cfg.F.shake.trauma_explosion))
+			Audio.play("explosion")
+		&"beam":
+			bolts.append({"pts": [d.from, d.from + Geom.dir(d.angle) * d.length], "t": 0.0, "life": 0.18, "col": Cfg.col("danger"), "straight": true, "w": d.width})
+			Audio.play("beam")
+		&"splash":
+			burst(P.DOT, d.pos, 14, Vector2.ZERO, PI, 80, 260, 0.4, 4.0, Color("#6ac0a0"))
+			_decal(d.pos, d.radius * 0.7, 0)
+		&"enemy_blink", &"enemy_dodged":
+			burst(P.SMOKE, d.from, 8, Vector2.ZERO, PI, 30, 120, 0.4, 12.0, Color(0.6, 0.5, 0.9, 0.4))
+			rings.append({"pos": d.to, "r0": 40.0, "r1": 6.0, "t": 0.0, "life": 0.2, "col": Color("#d45cff"), "w": 4.0})
+			if name == &"enemy_dodged":
+				_callout(d.to + Vector2(0, -36), "DODGED", Color("#d8d0ff"), 22)
+		&"channel_broken":
+			_callout(d.pos + Vector2(0, -36), "INTERRUPTED", Color.WHITE, 22)
+		&"mine_beep":
+			Audio.play("beep")
+		&"boss_phase":
+			cam.add_trauma(0.6)
+			cam.zoom_punch(0.06)
+			Audio.play("roar")
+		&"wave_started":
+			if int(d.index) > 0:
+				Audio.play("wave")
 		&"projectile_wall":
 			if d.team == 0:
 				burst(P.SPARK, d.pos, 4, Vector2.ZERO, PI, 60, 160, 0.15, 2.0, Color("#fff4d6"))
@@ -386,6 +415,10 @@ func draw_over(ci: CanvasItem, wv) -> void:
 	for b in bolts:
 		var pts: Array = b.pts
 		var a2: float = 1.0 - b.t / b.life
+		if b.get("straight", false):
+			ci.draw_line(pts[0], pts[1], Color(b.col, a2), float(b.w))
+			ci.draw_line(pts[0], pts[1], Color(1, 1, 1, a2), float(b.w) * 0.35)
+			continue
 		for k in range(pts.size() - 1):
 			var seg := _jag(pts[k], pts[k + 1])
 			ci.draw_polyline(seg, Color(1, 1, 1, a2 * 0.5), 7.0)
@@ -471,6 +504,9 @@ func _draw_projectiles(ci: CanvasItem, wv) -> void:
 		var pos: Vector2 = pr.prev.lerp(pr.pos, wv.alpha)
 		if pr.team == 1:
 			var r: float = pr.radius
+			if pr.art == "e_hook" and pr.owner != null and pr.owner.alive:
+				ci.draw_line(pr.owner.pos, pos, Cfg.col("danger_outline"), 5.0)
+				ci.draw_line(pr.owner.pos, pos, Cfg.col("danger_hot"), 2.0)
 			ci.draw_circle(pos, r * 2.0, Color(danger, 0.18))
 			var v: Vector2 = pr.vel
 			if v.length() > 40.0:

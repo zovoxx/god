@@ -46,3 +46,15 @@ Each entry: what was decided and why.
 - Damage arcs always point at the *attacker*, not at the impact centre of an area attack.
 - Perfect dash: starting a dash while inside an attack that lands within 0.15 s (or while an enemy projectile would reach the hitbox within 0.15 s).
 - Off-screen arrows are shown for every living enemy (half-transparent while still in a spawn portal) and for enemy projectiles on a course to pass near Wren; pulse rate scales from 1.5 Hz (far) to 9 Hz (near).
+
+## Enemies (phase 4)
+- **Every attack is a telegraph.** Contact damage only exists during telegraphed charges (the charge line is shown first). Small rushers (Grubs, Void Imps) bite with a short telegraphed lunge instead of touch damage.
+- Lunges deal their damage at the telegraph's impact (the shape is exactly the hit area); long charges (Bramblehorn, Thornback, Ashenhart) instead deal contact damage while travelling along the line that was shown, so the player can still step out after the charge begins.
+- The 170-unit minimum applies to every portal spawn (waves and summons): a spawn point closer than that is pushed out along the player→point direction. Split children (Slurry, Brood elites) emerge from the parent's corpse without a portal — they are not new arrivals.
+- Bosses cannot be frozen, countered or executed; guardians freeze for half as long and are rooted for half as long.
+- Tidecleric heal beams are teal-green (enemy support, not a threat to you) — not red, and distinct from the bright cyan pickup halo.
+- Twinned Scribes' tether is a cycle: rest (faint line) → 0.6 s flickering warning (the telegraph) → 2 s burning beam.
+- Glimmerjelly mines are floor hazards: they pulse while arming, then any player *or enemy* stepping close starts a 0.5 s blast telegraph that damages everyone inside.
+- Elite "Hasted" speeds movement and shortens cooldowns but never shortens telegraph windups below the minimums.
+- Velloran's Mirror Copies are optional enemies (the room clears without them) that cast twice and fade.
+- Scripts launched with `-s` can't statically reference classes that use autoloads, so tools and tests load their logic at runtime with `load()`.

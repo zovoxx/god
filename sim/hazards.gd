@@ -60,6 +60,7 @@ static func enemy_field(sim, owner, pos: Vector2, radius: float, warn: float, du
 	h.tick = 0.6
 	h.hits_left = 9999
 	h.color = Cfg.col("danger")
+	sim.fire(&"hazard_warn", {"id": h.id, "pos": pos, "radius": radius, "kind": kind, "warn": h.warn})
 	return h
 
 static func update_all(sim, dt: float) -> void:
@@ -82,6 +83,8 @@ static func update_all(sim, dt: float) -> void:
 				_hit_enemies(sim, h)
 				if h.tick <= 0.0:
 					sim.fire(&"hazard_burst", {"id": h.id, "pos": h.pos, "radius": h.radius, "kind": h.kind, "shape": h.shape, "angle": h.angle, "length": h.length, "width": h.width})
+		elif h.kind == "mine":
+			_mine(sim, h)
 		else:
 			if h.contains(p.pos, p.hit_radius):
 				h.tick_t -= dt
@@ -110,3 +113,25 @@ static func _hit_enemies(sim, h: SimHazard) -> void:
 				e.root_t = maxf(e.root_t, h.root * (0.5 if e.is_guardian else 1.0))
 			if h.data.has("pull") and e.alive and not e.no_knock:
 				e.kvel += (h.pos - e.pos).normalized() * float(h.data.pull) / maxf(0.5, e.mass)
+
+## Glimmerjelly mine: armed after its warning; stepping near it (player or enemy) starts a
+## beeping blast telegraph that hurts everyone inside.
+static func _mine(sim, h: SimHazard) -> void:
+	if h.data.get("triggered", false):
+		return
+	var trig: float = h.radius + 26.0
+	var hit = sim.player.pos.distance_to(h.pos) < trig
+	if not hit:
+		for e in sim.enemies:
+			if e.targetable() and not e.flying and e.pos.distance_to(h.pos) < trig:
+				hit = true
+				break
+	if hit:
+		h.data["triggered"] = true
+		var t := Tele.make(sim, null, Tele.Shape.CIRCLE, 0.5, h.dmg, "Glimmer Mine")
+		t.pos = h.pos
+		t.radius = float(h.data.get("blast", 80.0))
+		t.data["src_ref"] = h.data.get("src_ref")
+		t.data["hit_enemies"] = h.dmg * 2.0
+		h.life = h.t + 0.5
+		sim.fire(&"mine_beep", {"pos": h.pos})

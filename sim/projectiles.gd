@@ -73,7 +73,9 @@ static func update_all(sim, dt: float) -> void:
 			if Geom.in_circle(pr.pos, pr.radius, p.pos, p.hit_radius):
 				if p.is_invuln():
 					pass
-				elif Combat.hurt_player(sim, pr.dmg, pr.pos - pr.vel.normalized() * 30.0, pr.owner, pr.attack_name):
+				elif Combat.hurt_player(sim, pr.dmg, pr.owner.pos if pr.owner != null and pr.owner is SimEnemy else pr.pos - pr.vel.normalized() * 30.0, pr.owner if pr.owner == null or pr.owner.alive else SourceRef.of(pr.owner), pr.attack_name):
+					if pr.data.has("on_hit_player"):
+						pr.data.on_hit_player.call()
 					if pr.kind != SimProj.Kind.ORBIT:
 						pr.alive = false
 		if pr.alive:

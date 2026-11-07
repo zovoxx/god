@@ -73,6 +73,8 @@ static func freeze(sim, e: SimEnemy) -> void:
 	if e.tele != null:
 		Tele.cancel(sim, e.tele)
 		e.tele = null
+	e.set_state(0)
+	e.contact_on = false
 	sim.fire(&"status_applied", {"id": e.id, "status": "freeze", "pos": e.pos})
 	BoonFx.on_freeze(sim, e)
 

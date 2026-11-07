@@ -64,6 +64,16 @@ static func make(sim, kind: String, depth: int = 1) -> SimEnemy:
 ## spawns through a portal (harmless + invulnerable for pacing.spawn_portal seconds)
 static func spawn(sim, kind: String, pos: Vector2, depth: int = 1, opts: Dictionary = {}) -> SimEnemy:
 	var e := make(sim, kind, depth)
+	# portal spawns never open closer than spawn_min_dist to the player
+	if opts.get("portal", true) and not opts.get("ignore_min_dist", false):
+		var mn: float = sim.T.pacing.spawn_min_dist
+		var off: Vector2 = pos - sim.player.pos
+		if off.length() < mn:
+			pos = sim.player.pos + (off.normalized() if off.length() > 1.0 else Vector2.RIGHT.rotated(sim.rng.randf() * TAU)) * mn
+			pos.x = clampf(pos.x, sim.arena.rect.position.x + e.radius, sim.arena.rect.end.x - e.radius)
+			pos.y = clampf(pos.y, sim.arena.rect.position.y + e.radius, sim.arena.rect.end.y - e.radius)
+			if pos.distance_to(sim.player.pos) < mn:
+				pos = spawn_point(sim, e.radius)
 	e.pos = pos
 	e.prev = pos
 	if opts.get("portal", true):
@@ -122,6 +132,7 @@ static func update_all(sim, dt: float) -> void:
 		e.stagger_t = maxf(0.0, e.stagger_t - dt)
 		e.root_t = maxf(0.0, e.root_t - dt)
 		if e.can_act() and not sim.no_ai and e.brain != null:
+			e.t += dt
 			e.brain.update(sim, e, dt)
 		elif not e.can_act():
 			e.vel = e.vel * 0.8

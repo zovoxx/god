@@ -19,6 +19,7 @@ var mass := 1.0
 var speed := 100.0
 var speed_mul := 1.0
 var dmg_mul := 1.0
+var cd_mul := 1.0
 var elites: Array = []
 var is_boss := false
 var is_guardian := false

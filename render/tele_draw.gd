@@ -26,6 +26,13 @@ static func draw_all(ci: CanvasItem, sim: Sim, time: float) -> void:
 			if t.in_flash(flash_w):
 				ci.draw_line(t.pos, t.pos + d * t.length, Color(1, 1, 1, 0.8 * Cfg.flash_mul), 2.0)
 			continue
+		if t.data.has("lob_from"):
+			# lobbed projectile travelling toward its landing circle
+			var from: Vector2 = t.data.lob_from
+			var bp := from.lerp(t.pos, p) + Vector2(0, -sin(p * PI) * 90.0)
+			ci.draw_circle(bp, 10.0, Cfg.col("danger_outline"))
+			ci.draw_circle(bp, 7.5, danger)
+			ci.draw_circle(bp, 3.5, Cfg.col("danger_core"))
 		var fill := Color(danger, float(TG.fill_alpha) + 0.2 * p)
 		_shape(ci, t, 1.0, Color(danger, 0.12), true)       # full area, faint
 		_shape(ci, t, p, fill, true)                        # band filling from the outside in

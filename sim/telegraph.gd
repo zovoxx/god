@@ -123,9 +123,17 @@ static func _resolve(sim, t: Tele) -> void:
 		if t.perfect_candidate or (inside and p.state == SimPlayer.St.DASH and p.dash_iframes > 0.0 and sim.time - p.dash_started_at <= float(sim.F.perfect_dash.window)):
 			Combat.perfect_dash(sim, t.owner, t.attack_name)
 		elif inside and t.dmg > 0.0:
-			hit = Combat.hurt_player(sim, t.dmg, t.owner.pos if t.owner != null else t.pos, t.owner, t.attack_name)
+			var src = t.owner if t.owner != null else t.data.get("src_ref")
+			hit = Combat.hurt_player(sim, t.dmg, t.owner.pos if t.owner != null else t.pos, src, t.attack_name)
 	sim.fire(&"telegraph_impact", {"id": t.id, "pos": t.pos, "shape": t.shape, "radius": t.radius, "boss": t.boss, "hit": hit})
 	if t.owner != null and t.owner.tele == t:
 		t.owner.tele = null
+	if t.data.has("hit_enemies") and t.data.hit_enemies > 0.0:
+		for e in sim.enemies:
+			if e.targetable() and e != t.owner and t.contains(e.pos, e.radius):
+				var h := HitInfo.make(float(t.data.hit_enemies), "other", 0.6, e.pos - t.pos, t.pos)
+				h.no_infuse = true
+				h.can_crit = false
+				Combat.deal(sim, e, h)
 	if t.on_impact.is_valid():
 		t.on_impact.call()

@@ -107,11 +107,15 @@ func _sync_sprites() -> void:
 	for e in sim.enemies:
 		if not e.alive:
 			continue
-		var es := _sprite_for(e.id, e.art)
+		var hidden: bool = e.data.get("hidden", false)
+		var art: String = e.art
+		if hidden and (e.kind == "burrowmaw" or e.kind == "mini_deepmaw"):
+			art = "mound"
+		var es := _sprite_for(e.id, art)
 		es.seen = true
 		var en: Sprite2D = es.node
-		en.position = ipos(e)
-		var s: float = es.base * (e.radius / maxf(1.0, float(e.def.get("radius", e.radius))))
+		en.position = ipos(e) + Vector2(0, -float(e.data.get("hop_h", 0.0)))
+		var s: float = es.base * (e.radius / maxf(1.0, float(e.def.get("radius", e.radius)))) * float(e.def.get("art_scale", 1.0))
 		var q: float = e.squash
 		var spawn_k := 1.0
 		if e.spawn_t > 0.0:
@@ -121,6 +125,8 @@ func _sync_sprites() -> void:
 		en.flip_h = face.x < 0.0 and e.def.get("orient", "flip") == "flip"
 		en.rotation = e.facing if e.def.get("orient", "flip") == "rotate" else 0.0
 		en.modulate = Color(1, 1, 1, 0.5 + 0.5 * spawn_k)
+		if hidden and art != "mound":
+			en.modulate = Color(1, 1, 1, 0.12)
 		if e.frozen():
 			en.modulate = Color(0.7, 0.9, 1.3)
 		es.mat.set_shader_parameter("flash", clampf(e.flash_t / 0.085, 0.0, 1.0) * Cfg.flash_mul)
@@ -165,6 +171,18 @@ func _draw_under(ci: CanvasItem) -> void:
 	for e in sim.enemies:
 		if e.alive and not e.flying:
 			ci.draw_colored_polygon(Paint.ell(ipos(e) + Vector2(0, e.radius * 0.7), e.radius * 0.95, e.radius * 0.4, 14), Color(0, 0, 0, 0.32))
+	# spawn portals: red/orange swirl (purple for bosses) while the enemy is harmless
+	for e in sim.enemies:
+		if e.alive and e.spawn_t > 0.0:
+			var k: float = 1.0 - e.spawn_t / float(sim.T.pacing.spawn_portal)
+			var col: Color = Cfg.col("boss") if (e.is_boss or e.is_guardian) else Cfg.col("danger")
+			var c := ipos(e)
+			var r: float = e.radius * (1.4 + 0.4 * sin(time * 12.0))
+			ci.draw_circle(c, r, Color(0.02, 0.0, 0.03, 0.75))
+			ci.draw_arc(c, r, 0, TAU, 32, Color(col, 0.9), 4.0, true)
+			for i in 3:
+				var a := time * 6.0 + TAU * i / 3.0
+				ci.draw_arc(c, r * (0.4 + 0.5 * k), a, a + 1.2, 10, Color(col.lightened(0.3), 0.8), 3.0, true)
 	if fx != null:
 		fx.draw_under(ci, self)
 
@@ -173,8 +191,44 @@ func _draw_over(ci: CanvasItem) -> void:
 		return
 	if fx != null:
 		fx.draw_over(ci, self)
+	_draw_beams(ci)
 	_draw_enemy_info(ci)
 	_draw_player_clarity(ci)
+
+## tether beams (Twinned Scribes), heal beams (Tideclerics)
+func _draw_beams(ci: CanvasItem) -> void:
+	var danger := Cfg.col("danger")
+	for e in sim.enemies:
+		if not e.alive:
+			continue
+		if e.kind == "scribe" and e.data.get("leader", false):
+			var pt = e.data.get("partner")
+			if pt == null or not pt.alive:
+				continue
+			var a := ipos(e)
+			var b := ipos(pt)
+			match String(e.data.get("beam", "off")):
+				"warn":
+					var fl := 0.35 + 0.35 * sin(time * 30.0)
+					ci.draw_line(a, b, Color(Cfg.col("danger_outline"), 0.6), 6.0)
+					ci.draw_line(a, b, Color(danger, fl), 3.0)
+				"on":
+					ci.draw_line(a, b, Color(Cfg.col("danger_outline"), 0.9), 18.0)
+					ci.draw_line(a, b, Color(danger, 0.95), 12.0)
+					ci.draw_line(a, b, Cfg.col("danger_core"), 4.0)
+				_:
+					ci.draw_line(a, b, Color(danger, 0.12), 2.0)
+		elif e.kind == "tidecleric" and e.data.get("heal") != null:
+			var tg = e.data.heal
+			if tg.alive:
+				var pts := PackedVector2Array()
+				var a2 := ipos(e)
+				var b2 := ipos(tg)
+				for i in 9:
+					var k := float(i) / 8.0
+					pts.append(a2.lerp(b2, k) + (b2 - a2).orthogonal().normalized() * sin(k * 9.0 + time * 14.0) * 5.0)
+				ci.draw_polyline(pts, Color("#5ee8c8"), 4.0)
+				ci.draw_circle(b2, tg.radius + 4.0, Color(0.37, 0.91, 0.78, 0.25))
 
 const STATUS_COL := {"burn": "#ff9a3d", "chill": "#8fe8ff", "freeze": "#d8f6ff", "hex": "#b45cff", "bleed": "#86e04a", "mark": "#fff1a6"}
 

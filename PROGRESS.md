@@ -25,3 +25,13 @@
 - Shared UI theme + builders (`ui/ui.gd`) with visible focus for keyboard/gamepad.
 - Sparring Effigy training enemy that cycles all telegraph shapes.
 - Tests: hurt i-frames/hit-stop/knockback, damage log, hitbox size, chip timing, minimum windups, inside/outside hits, perfect-dash window (and an early dash not counting), spawn portals harmless+invulnerable, spawn distance ≥ 170, counters, finishers, projectile vs small hitbox.
+
+## Phase 4 — Depths 1–2: enemies, elites, guardians, bosses
+- 16 enemies with distinct roles and brains (`sim/ai/depth1.gd`, `sim/ai/depth2.gd`) plus summons (Grub, Slurrylet): Cinderling (rusher lunge), Bramblehorn (charger, wall stun), Spitbloom (lobber), Ashwisp (orbiting swarm), Burrowmaw (burrower), Kindlepod (bomber, chain blast), Thorn Warden (front shield), Grubmother (summoner); Inkshade (teleport ink gate + slash), Lanternist (tracking beam blocked by pillars), Twinned Scribe (tether pair with revive), Tidecleric (heal channel, interruptible), Hookjaw (hook pull + bite, dash breaks it), Slurry (hop splash, splits), Echo (dodger), Glimmerjelly (mines).
+- 10 combinable elite modifiers (`sim/elites.gd`) with HP/damage scaling, icons and death effects.
+- Boss/guardian framework (`sim/ai/boss.gd`): weighted attacks gated by phase/range/cooldown, callout banners, invulnerable phase roar that clears bullets.
+- Guardians Thornback, Bloom Mother, The Librarian, Deepmaw; bosses Ashenhart (Cinder Charge, Antler Sweep, Firefall, Flame Ring, Kindle Brood, Ember Spiral) and Velloran (Quill Storm, Seeking Pages, Drowning Tide, Ink Snipe, Blink, Mirror Copies), each with a phase-2 change.
+- Encounter planner with role templates, novelty weighting, Deepening gating, elite promotion; wave runner (next wave at 34 % or 13 s).
+- Spawn portals drawn as swirls (purple for bosses), burrow mounds, hop arcs, lob arcs, tether/heal/sniper beams, explosions.
+- Procedural sprites for all 18 depth 1–2 enemies, 4 guardians and 2 bosses.
+- Tests: roster sizes, brain/sprite/tip coverage, every enemy telegraphs and resolves attacks in a soak, bosses cycle ≥3 named attacks in 30 s and change phase invulnerably, 6+ attacks per boss, each elite modifier and all pair combinations, volatile/brood/blinking/vampiric effects, wave determinism per seed, Deepening gating, waves run to a clear.

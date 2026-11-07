@@ -127,6 +127,8 @@ static func deal(sim, e: SimEnemy, h: HitInfo) -> float:
 			Status.infuse(sim, e, pat, float(st.infuse_pow.get(h.slot, 1.0)), h)
 		if h.slot == "special" and st.infuse.get("special", "") == "thorn":
 			Status.burst_bleed(sim, e)
+	if not e.elites.is_empty():
+		Elites.on_hit(sim, e, h)
 	BoonFx.on_hit(sim, e, h, dealt, crit, first_hit)
 	if finisher:
 		sim.request_hitstop(float(F.hitstop.finisher))

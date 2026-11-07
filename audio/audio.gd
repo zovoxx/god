@@ -6,3 +6,6 @@ func apply_volumes(s: Dictionary) -> void:
 
 func play(id: String, pitch: float = 1.0, vol_db: float = 0.0) -> void:
 	pass
+
+func set_low_hp(on: bool) -> void:
+	pass

@@ -32,3 +32,17 @@ Each entry: what was decided and why.
 - **Pickups always carry a cyan halo** (the pickup colour), whatever their core: gold coins, Embers, HP orbs, the reward orb.
 - Halo: one chakram in flight at a time (two with Twin Halos); attack input is ignored until it returns.
 - Weapon forges: exactly 3 per weapon (the spec), plus 5 generic forges shared by all weapons.
+
+## Colour language (phase 3) — used everywhere, defined once in `game_feel.tres` (`colors`, `colors_cb`)
+| Colour | Meaning | Examples |
+| --- | --- | --- |
+| **Red / orange** | It will hurt you | every telegraph fill/edge, enemy projectiles (red body, bright cream core, near-black outline), enemy floor hazards, the HP bar, hurt edge-flash and damage arc, hurt numbers, off-screen threat arrows |
+| **White, gold, patron colours** | It is yours | swing trails, knives/arrows/halo, Sigil ring, starfall, fissures, crits (gold), hitbox dot, i-frame shield outline, Overdrive, status-coloured infusion sparks |
+| **Purple** | Boss | boss/guardian HP bar and name, attack-callout and phase banners, a purple rim on boss telegraphs (the fill stays red), boss off-screen arrows |
+| **Cyan** | Pickup or heal | halo around every pickup (gold coins, Embers, HP orbs, reward orb), heal numbers and heal fill (green-cyan) |
+- Player projectiles are never red; enemy projectiles are never white/gold.
+- Telegraphs: the shape fills from its outer edge inward over the windup; the edge turns white for the final `flash_window` (0.12 s) — that white flash is the **counter window**; at impact the whole shape flashes white for 0.14 s. Floor hazards pulse twice before they become active.
+- The colour-blind palette (`colors_cb`) swaps red→orange-amber and heal-green→teal, keeping danger/pickup contrast; shapes and outlines carry the meaning too, never colour alone.
+- Damage arcs always point at the *attacker*, not at the impact centre of an area attack.
+- Perfect dash: starting a dash while inside an attack that lands within 0.15 s (or while an enemy projectile would reach the hitbox within 0.15 s).
+- Off-screen arrows are shown for every living enemy (half-transparent while still in a spawn portal) and for enemy projectiles on a course to pass near Wren; pulse rate scales from 1.5 Hz (far) to 9 Hz (near).

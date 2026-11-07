@@ -5,6 +5,13 @@ extends Node2D
 const WorldView := preload("res://render/world_view.gd")
 const Cam := preload("res://render/cam.gd")
 const FxView := preload("res://render/fx_view.gd")
+const Hud := preload("res://ui/hud.gd")
+const PauseMenu := preload("res://ui/pause_menu.gd")
+const DeathRecap := preload("res://ui/death_recap.gd")
+
+signal request_restart
+signal request_wick
+signal request_title
 
 var sim: Sim
 var world
@@ -27,6 +34,69 @@ func _ready() -> void:
 	fx.world = world
 	world.fx = fx
 	add_child(fx)
+	var hud_layer := CanvasLayer.new()
+	hud_layer.layer = 10
+	add_child(hud_layer)
+	hud = Hud.new()
+	hud_layer.add_child(hud)
+	overlay = CanvasLayer.new()
+	overlay.layer = 20
+	overlay.process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(overlay)
+	Bus.player_died.connect(_on_player_died)
+
+var overlay: CanvasLayer
+var pause_menu = null
+var recap = null
+
+func _on_player_died(_d: Dictionary) -> void:
+	if sim == null or (sim.flow != null and sim.flow.handles_death()):
+		return
+	await get_tree().create_timer(float(Cfg.T.pacing.death_recap_delay), true, false, true).timeout
+	show_recap(Recap.build(sim))
+
+func show_recap(data: Dictionary) -> void:
+	if recap != null:
+		return
+	recap = DeathRecap.new()
+	recap.setup(data)
+	recap.descend_again.connect(func(): request_restart.emit())
+	recap.to_wick.connect(func(): request_wick.emit())
+	overlay.add_child(recap)
+	ui_blocking = true
+
+func open_pause() -> void:
+	if pause_menu != null or recap != null:
+		return
+	get_tree().paused = true
+	pause_menu = PauseMenu.new()
+	pause_menu.setup(sim)
+	pause_menu.resumed.connect(close_pause)
+	pause_menu.settings_requested.connect(func():
+		if App.main != null and App.main.has_method("open_settings"):
+			App.main.open_settings(overlay))
+	pause_menu.abandon.connect(func():
+		close_pause()
+		if sim != null and sim.flow != null:
+			sim.flow.abandon()
+		else:
+			request_wick.emit())
+	pause_menu.quit_title.connect(func():
+		close_pause()
+		request_title.emit())
+	overlay.add_child(pause_menu)
+	Audio.play("ui_open")
+
+func close_pause() -> void:
+	if pause_menu != null:
+		pause_menu.queue_free()
+		pause_menu = null
+	get_tree().paused = false
+
+func _unhandled_input(ev: InputEvent) -> void:
+	if ev.is_action_pressed("pause") and pause_menu == null and recap == null and not ui_blocking:
+		get_viewport().set_input_as_handled()
+		open_pause()
 
 func start_sim(s: Sim) -> void:
 	sim = s
@@ -34,6 +104,7 @@ func start_sim(s: Sim) -> void:
 	cam.snap_to(sim.player.pos)
 	if fx != null:
 		fx.bind(sim)
+	hud.bind(sim, world)
 
 func _input(ev: InputEvent) -> void:
 	if ev is InputEventMouseMotion and ev.relative.length() > 2.0:

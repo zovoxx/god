@@ -15,3 +15,13 @@
 - FX (`render/fx_view.gd`): packed particle system (sparks, shards, embers, smoke), fading floor decals, swing trails, dash ghosts, lightning, rings, merging damage numbers (pop-in, crit shake, status orange), callouts, camera trauma/kick per hit; FX run at 12 % during hit-stop.
 - Training room with dummies (keys 1–5 swap weapons).
 - Tests: frame data presence, combo timing and reset, 4-step chaining, dash-cancel of recovery, dash-attack window, every weapon's attack and special damage, hit-stop budget/scaling/freeze, crit math, knockback + wall slam, Sigil blast/root/recharge, bow perfect release, halo return, streak tiers, slow-mo easing.
+
+## Phase 3 — Damage clarity
+- Telegraph system (`sim/telegraph.gd`): circle, cone, line and ring shapes plus non-damaging projectile aim lines, minimum windups (0.35 s enemies / 0.5 s bosses) enforced centrally, attacker glow, counter window, perfect-dash detection, impact flash. Rendering in `render/tele_draw.gd` (fills from the outside in, white flash, purple boss rim). Enemy floor hazards pulse twice before activating.
+- Hurt pipeline: 70 ms hit-stop, knockback, 0.8 s i-frames with sprite flicker and shield outline, red damage number with the source's icon, damage log, dodge/barrier, Death Defiance hook, death slow-mo.
+- HUD (`ui/hud.gd`): HP bar with chip damage (`ui/hp_chip.gd`, white chip holds 0.5 s then drains; heals fill green), numeric HP, barrier segment, Death Defiance lanterns with a shatter, dash pips, Special/Sigil rings, Overdrive meter, gold/Embers, streak tier with timer, boon strip, boss bar, callout/phase banners, red edge flash, directional damage arcs, low-HP heartbeat vignette, off-screen threat arrows that pulse faster with proximity.
+- World overlays: small HP bars once damaged, elite icon rows, status icons with stack counts, cracking armor pips, finisher glow, hitbox dot whenever danger is near.
+- Pause screen (last 10 hits + boons with descriptions) and death recap card (killer sprite/name, killing attack, last 5 hits, enemy-specific tip, build, Embers, next-unlock bar, "Descend again" focused).
+- Shared UI theme + builders (`ui/ui.gd`) with visible focus for keyboard/gamepad.
+- Sparring Effigy training enemy that cycles all telegraph shapes.
+- Tests: hurt i-frames/hit-stop/knockback, damage log, hitbox size, chip timing, minimum windups, inside/outside hits, perfect-dash window (and an early dash not counting), spawn portals harmless+invulnerable, spawn distance ≥ 170, counters, finishers, projectile vs small hitbox.

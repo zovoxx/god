@@ -238,6 +238,7 @@ forges = {
 }
 enemies = {
 "dummy": {"name": "Straw Kindling", "depth": 0, "roles": [], "hp": 400, "speed": 0, "radius": 20, "mass": 3.0, "dmg": 0, "cost": 0, "art": "dummy", "blood": "#d8c08a", "tip": "A training dummy. It refills itself.", "regen": 60.0},
+"effigy": {"name": "Sparring Effigy", "depth": 0, "roles": [], "hp": 600, "speed": 90, "radius": 24, "mass": 4.0, "dmg": 6, "windup": 0.7, "cost": 0, "art": "effigy", "blood": "#c8b8e8", "tip": "Every attack shows its shape first. Dash through it in its last moment for a PERFECT dash.", "regen": 80.0, "super_armor": true},
 "dummy_walker": {"name": "Straw Walker", "depth": 0, "roles": [], "hp": 220, "speed": 70, "radius": 18, "mass": 1.5, "dmg": 0, "cost": 0, "art": "dummy", "blood": "#d8c08a", "tip": "A training dummy that wanders.", "regen": 40.0}
 }
 bosses = {}

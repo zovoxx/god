@@ -20,6 +20,9 @@ func start_test_room() -> void:
 	_clear()
 	game = GameView.new()
 	add_child(game)
+	game.request_restart.connect(start_test_room)
+	game.request_wick.connect(start_test_room)
+	game.request_title.connect(start_test_room)
 	var s := Sim.new(1234, Bus)
 	s.set_arena(Rect2(-620, -380, 1240, 760), [{"pos": Vector2(-300, -120), "r": 40.0}, {"pos": Vector2(300, 120), "r": 40.0}], 0)
 	s.equip_weapon(String(App.arg("weapon", "fangs")))
@@ -27,6 +30,7 @@ func start_test_room() -> void:
 		Enemies.spawn(s, "dummy", p, 1)
 	for p in [Vector2(-200, 150), Vector2(-250, -150)]:
 		Enemies.spawn(s, "dummy_walker", p, 1)
+	Enemies.spawn(s, "effigy", Vector2(0, -250), 1)
 	game.start_sim(s)
 
 func _unhandled_input(ev: InputEvent) -> void:
@@ -37,6 +41,7 @@ func _unhandled_input(ev: InputEvent) -> void:
 			game.sim.equip_weapon(Weapons.IDS[i])
 
 func _clear() -> void:
+	get_tree().paused = false
 	if game != null:
 		game.queue_free()
 		game = null

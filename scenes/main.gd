@@ -7,6 +7,9 @@ const GameView := preload("res://render/game_view.gd")
 const TitleScreen := preload("res://ui/title_screen.gd")
 const VictoryScreen := preload("res://ui/victory_screen.gd")
 const DeathRecap := preload("res://ui/death_recap.gd")
+const Wick := preload("res://ui/wick.gd")
+const RunSummary := preload("res://ui/run_summary.gd")
+const Toasts := preload("res://ui/toasts.gd")
 const RUN_SAVE := "user://run.json"
 
 var game = null
@@ -23,6 +26,12 @@ func _ready() -> void:
 	ui_layer = CanvasLayer.new()
 	ui_layer.layer = 30
 	add_child(ui_layer)
+	var tl := CanvasLayer.new()
+	tl.layer = 40
+	add_child(tl)
+	tl.add_child(Toasts.new())
+	Bus.room_cleared.connect(func(_d): _live_achievements())
+	Bus.enemy_spawned.connect(func(d): Meta.note_seen(App.meta, String(d.kind)))
 	await Assets.bake()
 	if App.arg("continue") != null and has_saved_run():
 		continue_run()
@@ -53,7 +62,7 @@ func show_title() -> void:
 	var menu: Array = []
 	if has_saved_run():
 		menu.append(["continue", "Continue descent"])
-	menu.append(["new", "Descend"])
+	menu.append(["wick", "Enter the Wick"])
 	menu.append(["training", "Training grounds"])
 	menu.append(["quit", "Quit"])
 	var t := TitleScreen.new()
@@ -65,6 +74,7 @@ func show_title() -> void:
 func _on_title(id: String) -> void:
 	match id:
 		"continue": continue_run()
+		"wick": show_wick()
 		"new": start_run({})
 		"training": start_test_room()
 		"quit": get_tree().quit()
@@ -83,6 +93,7 @@ func start_run(opts: Dictionary) -> void:
 	if seed_v == 0:
 		seed_v = int(Time.get_unix_time_from_system() * 1000.0) % 2147483647
 	var run := RunState.create(seed_v, String(o.weapon), o)
+	App.meta.last_weapon = run.weapon
 	var s := Sim.new(seed_v, Bus)
 	var flow := RoomFlow.new(s, run)
 	_make_game(s)
@@ -129,6 +140,8 @@ func _on_run_finished(d: Dictionary) -> void:
 	var s: Sim = game.sim
 	var result := Meta.end_run(App.meta, s.run, d)
 	App.save_meta()
+	for a in result.get("achievements", []):
+		Bus.fire(&"achievement", a)
 	if d.won:
 		var v := VictoryScreen.new()
 		v.setup(result.get("ending", []))
@@ -141,10 +154,36 @@ func _on_run_finished(d: Dictionary) -> void:
 		r.setup(data)
 		r.descend_again.connect(func(): start_run(last_opts))
 		r.to_wick.connect(func(): show_after_run(s, result))
+		Audio.music_state("death")
 		_show(r)
 
-func show_after_run(_s, _result) -> void:
-	show_title()
+func show_after_run(s, result) -> void:
+	_clear()
+	var rs := RunSummary.new()
+	rs.setup(s.run, result)
+	rs.done.connect(show_wick)
+	_show(rs)
+
+func show_wick() -> void:
+	_clear()
+	var w := Wick.new()
+	w.setup(App.meta)
+	w.start_run.connect(func(o): start_run(o))
+	w.quit_title.connect(show_title)
+	w.open_settings.connect(func(): open_settings(ui_layer))
+	_show(w)
+
+func open_settings(parent: Node) -> void:
+	if ClassDB.class_exists("Node") and ResourceLoader.exists("res://ui/settings_screen.gd"):
+		var st = load("res://ui/settings_screen.gd").new()
+		parent.add_child(st)
+
+## achievements that can be earned mid-run pop as soon as they happen
+func _live_achievements() -> void:
+	if game == null or game.sim == null or game.sim.run == null:
+		return
+	for a in Achievements.check(App.meta, game.sim.run):
+		Bus.fire(&"achievement", a)
 
 func on_quit() -> void:
 	autosave_now()

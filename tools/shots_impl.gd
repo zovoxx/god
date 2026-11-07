@@ -24,7 +24,7 @@ func scenarios() -> Array:
 	return [
 		{"name": "doors", "setup": _doors, "wait": 0, "until": _doors_ready},
 		{"name": "boss_telegraph", "setup": _boss, "wait": 0, "until": _boss_ready},
-		{"name": "death_recap", "setup": _death, "wait": 160},
+		{"name": "death_recap", "setup": _death, "wait": 200},
 		{"name": "boon_choice", "setup": _boon, "wait": 0, "until": _boon_ready},
 		{"name": "wick", "setup": _wick, "wait": 60},
 		{"name": "depth3", "setup": _depth3, "wait": 200},
@@ -122,6 +122,7 @@ func _death() -> void:
 	var s := _game()
 	var e := Enemies.spawn(s, "hookjaw", Vector2(200, 0), 2, {"portal": false})
 	s.player.hp = 5.0
+	s.run.defiance = 0
 	s.flow.state = RoomFlow.S.COMBAT
 	Combat.hurt_player(s, 6.0, e.pos, e, "Bite")
 
@@ -144,7 +145,8 @@ func _boon_ready() -> bool:
 	return _choice_frames > 45
 
 func _wick() -> void:
-	main.show_title()
+	App.meta.embers = maxi(int(App.meta.embers), 64)
+	main.show_wick()
 
 func _depth3() -> void:
 	main.start_run({"weapon": "anvil"})

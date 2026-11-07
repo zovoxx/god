@@ -311,6 +311,55 @@ elites = {
 "deep_pool": ["blinking", "orbiting", "brood"]
 }
 meta = {
+"unlocks": [
+{"id": "w_pike", "group": "Weapons", "name": "Moonreach", "desc": "A crescent pike: tip crits and a whirling Special.", "cost": 15},
+{"id": "w_anvil", "group": "Weapons", "name": "Anvilheart", "desc": "A molten maul: armor-breaking swings and a charged fissure.", "cost": 35},
+{"id": "w_bow", "group": "Weapons", "name": "Vesper Bow", "desc": "Quick shots, perfect-release power shots and starfall.", "cost": 55},
+{"id": "w_halo", "group": "Weapons", "name": "Sunwheel Halo", "desc": "A returning chakram that cuts both ways.", "cost": 80},
+{"id": "p_dawn", "group": "Lights", "name": "Solenne, the Dawnmother", "desc": "Marks and critical hits join your runs.", "cost": 25},
+{"id": "p_gale", "group": "Lights", "name": "Siffra, the Running Wind", "desc": "Speed, dash charges and wind blades.", "cost": 25},
+{"id": "p_umbra", "group": "Lights", "name": "Oruun, the Hollow Eye", "desc": "Spreading Hexes and death bursts.", "cost": 45},
+{"id": "p_thorn", "group": "Lights", "name": "Brakka, the Thornmother", "desc": "Bleed stacks that burst on heavy hits.", "cost": 45},
+{"id": "concord", "group": "The Wick", "name": "Concord", "desc": "Duo boons can appear when two Lights favour you.", "cost": 40},
+{"id": "heart1", "group": "The Wick", "name": "Ember Heart", "desc": "+10 max health.", "cost": 15},
+{"id": "heart2", "group": "The Wick", "name": "Ember Heart II", "desc": "+10 more max health.", "cost": 35, "requires": ["heart1"]},
+{"id": "defy2", "group": "The Wick", "name": "Second Wick", "desc": "+1 Death Defiance each run.", "cost": 60},
+{"id": "reroll2", "group": "The Wick", "name": "Moth Wings", "desc": "+1 reroll each run.", "cost": 25},
+{"id": "fatedie", "group": "The Wick", "name": "Fate Die", "desc": "Start each run with a Fate Die (reroll a choice with +1 rarity).", "cost": 30, "requires": ["reroll2"]},
+{"id": "purse", "group": "The Wick", "name": "Moth Purse", "desc": "Start each run with 40 gold.", "cost": 20},
+{"id": "k_charm", "group": "Keepsakes", "name": "Lucky Moth", "desc": "Keepsake: +5% critical chance.", "cost": 15},
+{"id": "k_feather", "group": "Keepsakes", "name": "Swift Feather", "desc": "Keepsake: move 8% faster.", "cost": 15},
+{"id": "k_locket", "group": "Keepsakes", "name": "Iron Locket", "desc": "Keepsake: +15 max health.", "cost": 20},
+{"id": "k_whetstone", "group": "Keepsakes", "name": "Whetstone", "desc": "Keepsake: attacks deal +10% damage.", "cost": 25},
+{"id": "k_ember", "group": "Keepsakes", "name": "Ember Coin", "desc": "Keepsake: +20% gold.", "cost": 20},
+{"id": "k_shell", "group": "Keepsakes", "name": "Tide Shell", "desc": "Keepsake: take 8% less damage.", "cost": 30},
+{"id": "deep1", "group": "Deepening", "name": "Deepening I", "desc": "New enemies (burrowers, dodgers, mines, saws, mites, lancers, null shards) and new elite types. +20% Embers.", "cost": 30},
+{"id": "deep2", "group": "Deepening", "name": "Deepening II", "desc": "Enemies from the next depth invade and elites carry two modifiers. +20% more Embers.", "cost": 70, "requires": ["deep1"]}
+],
+"base_patrons": ["ember", "rime", "storm", "tide"],
+"deepening_ember_bonus": 0.2,
+"vows": [
+{"id": "no_springs", "name": "No Springs", "desc": "Springs never appear.", "embers": 6, "kind": "enforced"},
+{"id": "elites", "name": "Elites Everywhere", "desc": "Every combat room brings an extra elite.", "embers": 8, "kind": "enforced"},
+{"id": "d2_damage", "name": "Unbroken Archive", "desc": "Take less than 100 damage in depth 2.", "embers": 10, "kind": "check"},
+{"id": "no_defy", "name": "Single Wick", "desc": "Never use a Death Defiance.", "embers": 8, "kind": "check"},
+{"id": "swift", "name": "Swift Descent", "desc": "Reach depth 2 within 7 minutes.", "embers": 6, "kind": "check"},
+{"id": "no_shop", "name": "Empty Purse", "desc": "Never buy anything from Quill.", "embers": 5, "kind": "check"},
+{"id": "guardians", "name": "Guardian's Bane", "desc": "Defeat two guardians.", "embers": 8, "kind": "check"},
+{"id": "streak", "name": "Kindled Fury", "desc": "Reach an INFERNO kill streak.", "embers": 6, "kind": "check"}
+],
+"vow_max": 3,
+"heat": [
+{"id": "hardened", "name": "Hardened", "desc": "Enemies have 25% more health.", "points": 2},
+{"id": "cruel", "name": "Cruel", "desc": "Enemies deal 30% more damage.", "points": 2},
+{"id": "swarming", "name": "Swarming", "desc": "One more elite in every combat room.", "points": 1},
+{"id": "scarce", "name": "Scarcity", "desc": "Start with no rerolls; Quill charges 30% more.", "points": 1},
+{"id": "brittle", "name": "Brittle Wick", "desc": "Start with 20% less max health.", "points": 2},
+{"id": "dimmed", "name": "Dimmed", "desc": "No Death Defiance.", "points": 3}
+],
+"heat_ember_bonus": 0.1,
+"mastery": {"thresholds": [0, 60, 160, 320, 560, 900], "xp_kill": 1, "xp_elite": 5, "xp_guardian": 15, "xp_boss": 30, "forge_levels": [1, 3]},
+"daily": {"rooms": 100, "kills": 5, "bosses": 500, "win": 2000, "time_penalty": 0.1},
 "keepsakes": {
 "k_charm": {"name": "Lucky Moth", "desc": "+5% critical chance.", "mods": [["crit_chance", 0.05]]},
 "k_feather": {"name": "Swift Feather", "desc": "Move 8% faster.", "mods": [["move_speed", 0.08]]},

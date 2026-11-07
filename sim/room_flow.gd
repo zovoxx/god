@@ -207,6 +207,8 @@ func _on_clear() -> void:
 	t = 0.0
 	run.rooms_cleared += 1
 	run.room_times.append(room_t)
+	if run.plan.type == "guardian" and room_dmg <= 0.0:
+		run.flags["guardian_untouched"] = true
 	var plan: Dictionary = run.plan
 	var is_boss: bool = plan.type == "boss"
 	var SM: Dictionary = sim.F.slowmo
@@ -358,6 +360,7 @@ func buy(i: int) -> bool:
 		return false
 	run.gold -= int(it.price)
 	it.sold = true
+	run.flags["bought"] = true
 	for a in it.actions:
 		Offers.do_action(sim, a)
 	sim.fire(&"shop_bought", {"id": it.id, "price": it.price})
@@ -418,6 +421,8 @@ func _go_through(i: int) -> void:
 	run.room_index += 1
 	if int(plan.depth) != run.depth:
 		run.shops_this_depth = 0
+		if int(plan.depth) == 2 and not run.flags.has("depth2_at"):
+			run.flags["depth2_at"] = run.time
 		sim.fire(&"depth_changed", {"depth": int(plan.depth), "name": Rooms.depth_name(int(plan.depth))})
 	enter(plan)
 

@@ -55,6 +55,8 @@ var kills_by_kind := {}
 var springs_used := 0
 var synergies := 0
 var killer := {}
+var flags := {}                 # run-level facts for vows/achievements
+var daily_key := ""
 
 static func create(seed_v: int, weapon_id: String, opts: Dictionary = {}) -> RunState:
 	var r := RunState.new()
@@ -77,6 +79,7 @@ static func create(seed_v: int, weapon_id: String, opts: Dictionary = {}) -> Run
 	r.forge_unlocks = int(opts.get("forge_unlocks", 3))
 	r.patrons = opts.get("patrons", ["ember", "rime", "storm", "tide"])
 	r.depth = int(opts.get("depth", 1))
+	r.daily_key = String(opts.get("daily_key", ""))
 	r.hp = r.max_hp()
 	return r
 
@@ -113,6 +116,7 @@ func hurt_mul() -> float:
 
 func add_gold(n: int) -> void:
 	gold += n
+	flags["max_gold"] = maxi(int(flags.get("max_gold", 0)), gold)
 
 func on_enemy_killed(sim, e: SimEnemy) -> void:
 	if e.summoned and not e.is_boss:
@@ -185,7 +189,7 @@ const SAVE_KEYS := ["seed", "weapon", "depth", "step", "room_index", "plan", "do
 	"gold", "embers", "rerolls", "fate_dice", "defiance", "keepsake", "shops_this_depth", "vows", "heat", "heat_mods", "daily", "deepening",
 	"concord", "forge_unlocks", "patrons", "time", "kills", "elite_kills", "rooms_cleared", "stats_dmg_dealt", "dmg_taken", "dmg_by_source", "dmg_by_depth",
 	"best_hit", "best_streak", "perfect_dashes", "counters", "finishers", "room_times", "bosses_killed", "guardians_killed", "kills_by_kind",
-	"springs_used", "synergies"]
+	"springs_used", "synergies", "flags", "daily_key", "killer"]
 
 func to_dict() -> Dictionary:
 	var d := {}

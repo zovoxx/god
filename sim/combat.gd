@@ -254,6 +254,7 @@ static func player_down(sim, entry: Dictionary) -> void:
 	var p: SimPlayer = sim.player
 	if sim.run != null and sim.run.defiance > 0:
 		sim.run.defiance -= 1
+		sim.run.flags["defied"] = true
 		p.hp = maxf(1.0, round(p.max_hp * float(sim.T.player.defy_heal_frac)))
 		p.invuln_t = float(sim.T.player.defy_iframes)
 		sim.slowmo(float(sim.F.slowmo.defied_scale), float(sim.F.slowmo.defied_duration))

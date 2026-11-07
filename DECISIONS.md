@@ -87,3 +87,14 @@ Each entry: what was decided and why.
 - The Pale Regent is pale by design; she still reads as a boss through the purple crown/aura, purple HP bar and red eyes.
 - The Engine Tyrant's phase-2 change is OVERHEAT: four lasers instead of two, more mortars/vents/saws and a new Meltdown ring attack.
 - The Riveters guardian always spawns as a linked pair; the room clears when both are dead.
+
+## The Wick and meta progression (phase 8)
+- The Wick is a menu hub (with Ossa, Wren and Quill around the hearth) rather than a walkable room: every feature is one or two presses away with keyboard or gamepad, and a run starts in well under two seconds.
+- Flow after a run: death recap (Descend again focused) → Return to the Wick → run summary → the Wick. A win shows the ending, then the summary.
+- Embers earned = picked-up Embers + 3 per depth reached + 15 for a win, × (1 + 20 % per Deepening tier + 10 % per Heat point), + kept Vows.
+- Vows: two are enforced (No Springs, Elites Everywhere — paid if the run clears depth 1), six are checked at the end of the run. Up to three per run; the Daily Descent ignores Vows, Keepsakes and Heat so its scores are comparable.
+- Weapon mastery XP: 1 per kill, 5 per elite, 15 per guardian, 30 per boss. Level 0 has the first weapon forge; levels 1 and 3 unlock the second and third; levels 2, 4, 5 are cosmetic glows.
+- The Kindling Heat unlocks with the first win; six stackable modifiers (1–3 points each).
+- Daily Descent seed and weapon are derived from the local date (`YYYY-MM-DD`); the top 10 local scores per day are kept. Score = 100/room + 5/kill + 500/boss + 2000 for a win − 0.1/second.
+- The bestiary records a creature when it first appears, counts kills and deaths to it, and reveals its tip after 3 kills or a death to it.
+- Achievements that can happen mid-run are checked on every room clear and pop as toasts immediately; the rest are checked at the end of the run.

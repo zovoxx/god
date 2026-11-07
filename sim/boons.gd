@@ -257,6 +257,10 @@ static func grant(sim, id: String, rarity: int) -> void:
 			run.recompute(sim)
 			return
 	run.boons.append({"id": id, "rarity": rarity, "level": 1})
+	if slot == "legendary":
+		run.flags["legendary"] = true
+	if slot == "duo":
+		run.flags["duo"] = true
 	run.recompute(sim)
 	sim.fire(&"boon_gained", {"id": id, "rarity": rarity, "slot": slot})
 

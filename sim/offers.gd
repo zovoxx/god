@@ -93,7 +93,8 @@ static func gold(sim) -> Dictionary:
 
 static func price(sim, base_key: String) -> int:
 	var E: Dictionary = sim.T.economy
-	return int(round(float(E.shop_prices[base_key]) * (1.0 + float(E.shop_price_depth_mul) * (sim.run.depth - 1))))
+	var heat_mul := 1.3 if sim.run.has_heat("scarce") else 1.0
+	return int(round(float(E.shop_prices[base_key]) * (1.0 + float(E.shop_price_depth_mul) * (sim.run.depth - 1)) * heat_mul))
 
 static func shop_stock(sim) -> Array:
 	var run: RunState = sim.run

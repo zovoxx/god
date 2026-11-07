@@ -57,3 +57,11 @@
 - Projectile wall bounce, player slows (Time Sigil, latches), Bellwether buff; drawing of fences, lasers, beams, gravity wells, auras, bubbles, spin rings.
 - Sprites for all 19 new enemies, 4 guardians and 2 bosses.
 - Tests now cover all four depths (rosters, brains/sprites/tips, attack soak, boss phases and ≥6 attacks), depth 3–4 specials (spin invulnerability, reflect, armor stun, Bellwether aura, Sparkmite shake-off), and a scripted **full run to victory** (24 rooms, all four bosses).
+
+## Phase 8 — The Wick and the loop
+- `sim/meta.gd`: 23 unlocks (4 weapons, 4 Lights, Concord, 2 hearts, Second Wick, Moth Wings, Fate Die, Moth Purse, 6 Keepsakes, Deepening I–II), run options from the Wick, end-of-run settlement (Embers with Deepening/Heat bonuses, Vows, boss kills, totals, mastery XP, bestiary, personal bests, Daily scores, Heat unlock), 28-line story told one line per run end, ending text.
+- `sim/achievements.gd`: 30 achievements with toast pop-ups (`ui/toasts.gd`).
+- `ui/wick.gd`: hub with Descend (Vows → weapon select), Daily Descent (seed, weapon, local best table), the Wick tree, Keepsakes, Kindling Heat, Weapon Mastery (XP bars + forge unlocks), Bestiary, Achievements, Story log, Settings.
+- `ui/run_summary.gd`: time, depth, rooms, kills, damage dealt, damage taken per source (bars), best hit, highest streak, perfect dashes/counters/finishers, Embers, Vows kept, mastery gain, boons, achievements, personal-best comparisons.
+- Death recap now carries the next-unlock progress bar and the new story line.
+- Tests: purchases + requirements, unlocks shaping run options, keepsakes, mastery → forges, Ember maths, Vows, Heat, story, achievements, Daily seed/weapon/score, bestiary, personal bests, meta JSON round trip.
